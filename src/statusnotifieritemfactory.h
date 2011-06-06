@@ -32,8 +32,14 @@ public:
     QAbstractSystemTrayIconSys * create(QSystemTrayIcon *trayIcon);
     bool isAvailable() const;
 
+private Q_SLOTS:
+    void slotSnwOwnerChanged(const QString&, const QString&, const QString&);
+    void slotHostRegisteredWithSnw();
+
 private:
     bool m_isAvailable;
+
+    void connectToSnw();
 };
 
 #endif /* STATUSNOTIFIERITEMFACTORY_H */
