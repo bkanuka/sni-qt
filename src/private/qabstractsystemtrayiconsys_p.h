@@ -60,13 +60,18 @@
 
 class QAbstractSystemTrayIconSys;
 
-struct QSystemTrayIconSysFactoryInterface : public QFactoryInterface
+class QSystemTrayIconSysFactoryInterface : public QObject, public QFactoryInterface
 {
+    Q_OBJECT
+public:
     virtual QAbstractSystemTrayIconSys * create(QSystemTrayIcon *) = 0;
     virtual bool isAvailable() const = 0;
 
     // \reimp
-    virtual QStringList keys() const { return QStringList() << "default"; }
+    virtual QStringList keys() const { return QStringList() << QLatin1String("default"); }
+
+Q_SIGNALS:
+    void availableChanged(bool);
 };
 
 #define QSystemTrayIconSysFactoryInterface_iid "com.nokia.qt.QSystemTrayIconSysFactoryInterface"

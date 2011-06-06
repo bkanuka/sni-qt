@@ -41,13 +41,21 @@ public:
         QSystemTrayIcon::MessageIcon icon, int msecs);
 };
 
-class StatusNotifierItemFactory : public QObject, public QSystemTrayIconSysFactoryInterface
+class StatusNotifierItemFactory : public QSystemTrayIconSysFactoryInterface
 {
     Q_OBJECT
     Q_INTERFACES(QSystemTrayIconSysFactoryInterface:QFactoryInterface)
 public:
+    StatusNotifierItemFactory();
     QAbstractSystemTrayIconSys * create(QSystemTrayIcon *trayIcon);
     bool isAvailable() const;
+
+private Q_SLOTS:
+    void toggleAvailable();
+
+private:
+    QTimer* m_fakeAvailableTimer;
+    bool m_isAvailable;
 };
 
 

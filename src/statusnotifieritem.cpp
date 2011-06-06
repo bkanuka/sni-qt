@@ -25,6 +25,7 @@
 
 // Qt
 #include <QDebug>
+#include <QTimer>
 #include <QtPlugin>
 
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
@@ -61,6 +62,18 @@ void StatusNotifierItem::showMessage(const QString &message, const QString &titl
 }
 
 //////////////////////////////////////////////////////////////
+StatusNotifierItemFactory::StatusNotifierItemFactory()
+: m_fakeAvailableTimer(new QTimer(this))
+, m_isAvailable(true)
+{
+    m_fakeAvailableTimer->setInterval(1000);
+    m_fakeAvailableTimer->setSingleShot(false);
+    connect(m_fakeAvailableTimer, SIGNAL(timeout()),
+        SLOT(toggleAvailable()));
+
+    m_fakeAvailableTimer->start();
+}
+
 QAbstractSystemTrayIconSys* StatusNotifierItemFactory::create(QSystemTrayIcon* sys)
 {
     return new StatusNotifierItem(sys);
@@ -68,7 +81,14 @@ QAbstractSystemTrayIconSys* StatusNotifierItemFactory::create(QSystemTrayIcon* s
 
 bool StatusNotifierItemFactory::isAvailable() const
 {
-    return true;
+    return m_isAvailable;
+}
+
+void StatusNotifierItemFactory::toggleAvailable()
+{
+    m_isAvailable = !m_isAvailable;
+    qDebug() << __FUNCTION__ << m_isAvailable;
+    availableChanged(m_isAvailable);
 }
 
 Q_EXPORT_PLUGIN2(statusnotifieritem, StatusNotifierItemFactory)
