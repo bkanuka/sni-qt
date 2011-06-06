@@ -1,6 +1,7 @@
 # Source
 set(sni_qt_SRCS
     statusnotifieritem.cpp
+    statusnotifieritemfactory.cpp
     )
 
 # Build

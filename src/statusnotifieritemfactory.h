@@ -18,27 +18,22 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef STATUSNOTIFIERITEM_H
-#define STATUSNOTIFIERITEM_H
-
-#include <QObject>
-
+#ifndef STATUSNOTIFIERITEMFACTORY_H
+#define STATUSNOTIFIERITEMFACTORY_H
 
 #include <private/qabstractsystemtrayiconsys_p.h>
 
-class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
+class StatusNotifierItemFactory : public QSystemTrayIconSysFactoryInterface
 {
     Q_OBJECT
+    Q_INTERFACES(QSystemTrayIconSysFactoryInterface:QFactoryInterface)
 public:
-    StatusNotifierItem(QSystemTrayIcon*);
-    ~StatusNotifierItem();
+    StatusNotifierItemFactory();
+    QAbstractSystemTrayIconSys * create(QSystemTrayIcon *trayIcon);
+    bool isAvailable() const;
 
-    QRect geometry() const;
-    void updateVisibility();
-    void updateIcon();
-    void updateToolTip();
-    void showMessage(const QString &message, const QString &title,
-        QSystemTrayIcon::MessageIcon icon, int msecs);
+private:
+    bool m_isAvailable;
 };
 
-#endif // STATUSNOTIFIERITEM_H
+#endif /* STATUSNOTIFIERITEMFACTORY_H */

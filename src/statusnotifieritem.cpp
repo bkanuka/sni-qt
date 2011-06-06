@@ -25,8 +25,6 @@
 
 // Qt
 #include <QDebug>
-#include <QTimer>
-#include <QtPlugin>
 
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
 : QAbstractSystemTrayIconSys(icon)
@@ -47,7 +45,7 @@ void StatusNotifierItem::updateVisibility()
 
 void StatusNotifierItem::updateIcon()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << __FUNCTION__ << trayIcon->icon().name();
 }
 
 void StatusNotifierItem::updateToolTip()
@@ -60,37 +58,5 @@ void StatusNotifierItem::showMessage(const QString &message, const QString &titl
 {
     qDebug() << __FUNCTION__ << message;
 }
-
-//////////////////////////////////////////////////////////////
-StatusNotifierItemFactory::StatusNotifierItemFactory()
-: m_fakeAvailableTimer(new QTimer(this))
-, m_isAvailable(true)
-{
-    m_fakeAvailableTimer->setInterval(1000);
-    m_fakeAvailableTimer->setSingleShot(false);
-    connect(m_fakeAvailableTimer, SIGNAL(timeout()),
-        SLOT(toggleAvailable()));
-
-    m_fakeAvailableTimer->start();
-}
-
-QAbstractSystemTrayIconSys* StatusNotifierItemFactory::create(QSystemTrayIcon* sys)
-{
-    return new StatusNotifierItem(sys);
-}
-
-bool StatusNotifierItemFactory::isAvailable() const
-{
-    return m_isAvailable;
-}
-
-void StatusNotifierItemFactory::toggleAvailable()
-{
-    m_isAvailable = !m_isAvailable;
-    qDebug() << __FUNCTION__ << m_isAvailable;
-    availableChanged(m_isAvailable);
-}
-
-Q_EXPORT_PLUGIN2(statusnotifieritem, StatusNotifierItemFactory)
 
 #include <statusnotifieritem.moc>
