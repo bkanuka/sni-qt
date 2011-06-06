@@ -20,15 +20,40 @@
 */
 #include "statusnotifieritem.h"
 
+// Local
+#include <statusnotifieritemadaptor.h>
+
 // dbusmenu-qt
 #include <dbusmenuexporter.h>
 
 // Qt
+#include <QDBusConnection>
+#include <QDBusMetaType>
 #include <QDebug>
+
+void registerMetaTypes()
+{
+    static bool registered = false;
+    if (registered) {
+        return;
+    }
+    qDBusRegisterMetaType<DBusImage>();
+    qDBusRegisterMetaType<DBusImageList>();
+    qDBusRegisterMetaType<DBusToolTip>();
+}
 
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
 : QAbstractSystemTrayIconSys(icon)
-{}
+{
+    registerMetaTypes();
+
+    static int id = 1;
+    QString objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
+
+    StatusNotifierItemAdaptor* adaptor = new StatusNotifierItemAdaptor(this);
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    bus.registerObject(objectPath, adaptor, QDBusConnection::ExportAllContents);
+}
 
 StatusNotifierItem::~StatusNotifierItem()
 {}
@@ -57,6 +82,27 @@ void StatusNotifierItem::showMessage(const QString &message, const QString &titl
     QSystemTrayIcon::MessageIcon icon, int msecs)
 {
     qDebug() << __FUNCTION__ << message;
+}
+
+void StatusNotifierItem::Activate(int, int)
+{
+}
+
+void StatusNotifierItem::ContextMenu(int, int)
+{
+}
+
+void StatusNotifierItem::Scroll(int, const QString&)
+{
+}
+
+void StatusNotifierItem::SecondaryActivate(int, int)
+{
+}
+
+QString StatusNotifierItem::iconName() const
+{
+    return "konqueror";
 }
 
 #include <statusnotifieritem.moc>

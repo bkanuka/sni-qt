@@ -1,5 +1,7 @@
 # Source
 set(sni_qt_SRCS
+    dbusimage.cpp
+    dbustooltip.cpp
     statusnotifieritem.cpp
     statusnotifieritemfactory.cpp
     )
@@ -16,6 +18,11 @@ include_directories(
     )
 
 qt4_automoc(${sni_qt_SRCS})
+
+qt4_add_dbus_adaptor(sni_qt_SRCS
+    ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.StatusNotifierItem.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/statusnotifieritem.h StatusNotifierItem
+    )
 
 add_library(sni-qt MODULE
     ${sni_qt_SRCS}

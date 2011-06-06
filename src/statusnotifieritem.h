@@ -21,24 +21,41 @@
 #ifndef STATUSNOTIFIERITEM_H
 #define STATUSNOTIFIERITEM_H
 
-#include <QObject>
-
+// Local
+#include <dbusimage.h>
+#include <dbustooltip.h>
 
 #include <private/qabstractsystemtrayiconsys_p.h>
+
+// Qt
+#include <QObject>
 
 class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.StatusNotifierItem")
+    Q_PROPERTY(QString IconName READ iconName)
 public:
     StatusNotifierItem(QSystemTrayIcon*);
     ~StatusNotifierItem();
 
+    // QAbstractSystemTrayIconSys
     QRect geometry() const;
     void updateVisibility();
     void updateIcon();
     void updateToolTip();
     void showMessage(const QString &message, const QString &title,
         QSystemTrayIcon::MessageIcon icon, int msecs);
+    /// QAbstractSystemTrayIconSys
+
+    // StatusNotifierItem
+    void Activate(int, int);
+    void ContextMenu(int, int);
+    void Scroll(int, const QString&);
+    void SecondaryActivate(int, int);
+
+    QString iconName() const;
+    // /StatusNotifierItem
 };
 
 #endif // STATUSNOTIFIERITEM_H
