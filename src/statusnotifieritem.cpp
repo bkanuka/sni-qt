@@ -78,11 +78,13 @@ void StatusNotifierItem::updateIcon()
 {
     m_iconPixmap.clear();
     NewIcon();
+    // ToolTip contains the icon
+    NewToolTip();
 }
 
 void StatusNotifierItem::updateToolTip()
 {
-    qDebug() << __FUNCTION__;
+    NewToolTip();
 }
 
 void StatusNotifierItem::updateMenu()
@@ -188,6 +190,17 @@ DBusImageList StatusNotifierItem::iconPixmap() const
         const_cast<StatusNotifierItem*>(this)->m_iconPixmap = DBusImage::createListFromIcon(trayIcon->icon());
     }
     return m_iconPixmap;
+}
+
+DBusToolTip StatusNotifierItem::toolTip() const
+{
+    DBusToolTip tip;
+    tip.iconName = iconName();
+    if (tip.iconName.isEmpty()) {
+        tip.iconPixmap = iconPixmap();
+    }
+    tip.title = trayIcon->toolTip();
+    return tip;
 }
 
 #include <statusnotifieritem.moc>

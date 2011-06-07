@@ -51,6 +51,7 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_PROPERTY(QString AttentionIconName READ attentionIconName)
     Q_PROPERTY(DBusImageList AttentionIconPixmap READ attentionIconPixmap)
     Q_PROPERTY(QString AttentionMovieName READ attentionMovieName)
+    Q_PROPERTY(DBusToolTip ToolTip READ toolTip)
     Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
     StatusNotifierItem(QSystemTrayIcon*);
@@ -86,11 +87,13 @@ public:
     QString attentionIconName() const { return QString(); }
     DBusImageList attentionIconPixmap() const { return DBusImageList(); }
     QString attentionMovieName() const { return QString(); }
+    DBusToolTip toolTip() const;
     QDBusObjectPath menu() const;
 
 Q_SIGNALS:
     void NewStatus(const QString &status);
     void NewIcon();
+    void NewToolTip();
     // /StatusNotifierItem
 
 private:

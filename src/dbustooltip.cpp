@@ -26,7 +26,7 @@
 QDBusArgument& operator<<(QDBusArgument& argument, const DBusToolTip& tip)
 {
     argument.beginStructure();
-    argument << tip.iconName << tip.iconData << tip.title << tip.description;
+    argument << tip.iconName << tip.iconPixmap << tip.title << tip.description;
     argument.endStructure();
     return argument;
 }
@@ -34,7 +34,7 @@ QDBusArgument& operator<<(QDBusArgument& argument, const DBusToolTip& tip)
 const QDBusArgument& operator>>(const QDBusArgument& argument, DBusToolTip& tip)
 {
     argument.beginStructure();
-    argument >> tip.iconName >> tip.iconData >> tip.title >> tip.description;
+    argument >> tip.iconName >> tip.iconPixmap >> tip.title >> tip.description;
     argument.endStructure();
     return argument;
 }

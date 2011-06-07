@@ -31,7 +31,7 @@ class QDBusArgument;
 struct DBusToolTip
 {
     QString iconName;
-    DBusImageList iconData;
+    DBusImageList iconPixmap;
     QString title;
     QString description;
 };
