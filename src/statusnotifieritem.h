@@ -43,6 +43,7 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_PROPERTY(QString Id READ id)
     Q_PROPERTY(QString Title READ title)
     Q_PROPERTY(QString Status READ status)
+    Q_PROPERTY(quint32 WindowId READ windowId)
     Q_PROPERTY(QString IconName READ iconName)
     Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
@@ -71,6 +72,7 @@ public:
     QString id() const;
     QString title() const;
     QString status() const;
+    quint32 windowId() const { return 0; }
     QString iconName() const;
     QDBusObjectPath menu() const;
 
