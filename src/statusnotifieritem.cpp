@@ -129,12 +129,13 @@ QString StatusNotifierItem::objectPath() const
 
 QString StatusNotifierItem::id() const
 {
-    return QCoreApplication::applicationName();
+    return QCoreApplication::applicationFilePath().section('/', -1);
 }
 
 QString StatusNotifierItem::title() const
 {
-    return QCoreApplication::applicationName();
+    QString title = QCoreApplication::applicationName();
+    return title.isEmpty() ? id() : title;
 }
 
 QDBusObjectPath StatusNotifierItem::menu() const
