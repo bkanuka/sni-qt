@@ -40,9 +40,10 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.StatusNotifierItem")
     Q_PROPERTY(QString Category READ category)
-    Q_PROPERTY(QString IconName READ iconName)
     Q_PROPERTY(QString Id READ id)
     Q_PROPERTY(QString Title READ title)
+    Q_PROPERTY(QString Status READ status)
+    Q_PROPERTY(QString IconName READ iconName)
     Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
     StatusNotifierItem(QSystemTrayIcon*);
@@ -67,10 +68,14 @@ public:
     void SecondaryActivate(int, int);
 
     QString category() const;
-    QString iconName() const;
     QString id() const;
     QString title() const;
+    QString status() const;
+    QString iconName() const;
     QDBusObjectPath menu() const;
+
+Q_SIGNALS:
+    void NewStatus(const QString &status);
     // /StatusNotifierItem
 
 private:

@@ -54,9 +54,9 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
     static int id = 1;
     m_objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
 
-    StatusNotifierItemAdaptor* adaptor = new StatusNotifierItemAdaptor(this);
+    new StatusNotifierItemAdaptor(this);
     QDBusConnection bus = QDBusConnection::sessionBus();
-    bus.registerObject(m_objectPath, adaptor, QDBusConnection::ExportAllContents);
+    bus.registerObject(m_objectPath, this, QDBusConnection::ExportAllContents);
 
     updateMenu();
 }
@@ -71,7 +71,7 @@ QRect StatusNotifierItem::geometry() const
 
 void StatusNotifierItem::updateVisibility()
 {
-    qDebug() << __FUNCTION__;
+    NewStatus(status());
 }
 
 void StatusNotifierItem::updateIcon()
@@ -170,6 +170,11 @@ QString StatusNotifierItem::category() const
             qPrintable(validCategories.join(", ")));
     }
     return category;
+}
+
+QString StatusNotifierItem::status() const
+{
+    return trayIcon->isVisible() ? "Active" : "Passive";
 }
 
 #include <statusnotifieritem.moc>
