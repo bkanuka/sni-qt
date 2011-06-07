@@ -76,7 +76,7 @@ void StatusNotifierItem::updateVisibility()
 
 void StatusNotifierItem::updateIcon()
 {
-    qDebug() << __FUNCTION__ << trayIcon->icon().name();
+    NewIcon();
 }
 
 void StatusNotifierItem::updateToolTip()
@@ -119,7 +119,7 @@ void StatusNotifierItem::SecondaryActivate(int, int)
 
 QString StatusNotifierItem::iconName() const
 {
-    return "konqueror";
+    return trayIcon->icon().name();
 }
 
 QString StatusNotifierItem::objectPath() const

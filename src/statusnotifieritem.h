@@ -78,6 +78,7 @@ public:
 
 Q_SIGNALS:
     void NewStatus(const QString &status);
+    void NewIcon();
     // /StatusNotifierItem
 
 private:
