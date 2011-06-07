@@ -32,6 +32,9 @@
 #include <QDBusMetaType>
 #include <QDebug>
 
+static const char* SNI_CATEGORY_PROPERTY = "_qt_sni_category";
+static const char* DEFAULT_CATEGORY = "ApplicationStatus";
+
 void registerMetaTypes()
 {
     static bool registered = false;
@@ -144,6 +147,29 @@ QDBusObjectPath StatusNotifierItem::menu() const
 QString StatusNotifierItem::menuObjectPath() const
 {
     return objectPath() + "/menu";
+}
+
+QString StatusNotifierItem::category() const
+{
+    static QStringList validCategories = QStringList()
+        << "ApplicationStatus"
+        << "Communications"
+        << "SystemServices"
+        << "Hardware"
+        ;
+
+    QVariant value = trayIcon->property(SNI_CATEGORY_PROPERTY);
+    if (!value.canConvert<QString>()) {
+        return DEFAULT_CATEGORY;
+    }
+
+    QString category = value.toString();
+    if (!validCategories.contains(category)) {
+        qWarning("\"%s\" is not a valid value for \"%s\" property. Valid values are: %s",
+            qPrintable(category), SNI_CATEGORY_PROPERTY,
+            qPrintable(validCategories.join(", ")));
+    }
+    return category;
 }
 
 #include <statusnotifieritem.moc>
