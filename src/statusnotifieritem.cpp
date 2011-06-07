@@ -76,6 +76,7 @@ void StatusNotifierItem::updateVisibility()
 
 void StatusNotifierItem::updateIcon()
 {
+    m_iconPixmap.clear();
     NewIcon();
 }
 
@@ -176,6 +177,17 @@ QString StatusNotifierItem::category() const
 QString StatusNotifierItem::status() const
 {
     return trayIcon->isVisible() ? "Active" : "Passive";
+}
+
+DBusImageList StatusNotifierItem::iconPixmap() const
+{
+    if (!iconName().isEmpty()) {
+        return DBusImageList();
+    }
+    if (m_iconPixmap.isEmpty()) {
+        const_cast<StatusNotifierItem*>(this)->m_iconPixmap = DBusImage::createListFromIcon(trayIcon->icon());
+    }
+    return m_iconPixmap;
 }
 
 #include <statusnotifieritem.moc>
