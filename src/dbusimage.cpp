@@ -27,6 +27,9 @@
 #include <QImage>
 #include <QPixmap>
 
+// libc
+#include <arpa/inet.h>
+
 QDBusArgument& operator<<(QDBusArgument& argument, const DBusImage& image)
 {
     argument.beginStructure();
@@ -79,10 +82,13 @@ DBusImage DBusImage::createFromPixmap(const QPixmap& pixmap)
     dbusImage.height = pixmap.height();
 
     dbusImage.pixels.resize(dbusImage.width * dbusImage.height * 4);
-    char* ptr = dbusImage.pixels.data();
-    const int byteWidth = dbusImage.width * 4;
-    for (int y=0; y < dbusImage.height; ++y, ptr += byteWidth) {
-        memcpy(ptr, image.constScanLine(y), byteWidth);
+    quint32* dstPtr = reinterpret_cast<quint32*>(dbusImage.pixels.data());
+    for (int y = 0; y < dbusImage.height; ++y) {
+        const quint32* srcPtr = reinterpret_cast<const quint32*>(image.constScanLine(y));
+        const quint32* srcEnd = srcPtr + dbusImage.width;
+        for (; srcPtr != srcEnd; ++srcPtr, ++dstPtr) {
+            *dstPtr = htonl(*srcPtr);
+        }
     }
 
     return dbusImage;

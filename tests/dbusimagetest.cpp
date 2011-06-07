@@ -29,13 +29,20 @@
 #include <QPainter>
 #include <QPixmap>
 
+// libc
+#include <arpa/inet.h>
+
 static QImage qImageFromDBusImage(const DBusImage& dbusImage)
 {
     QImage img(dbusImage.width, dbusImage.height, QImage::Format_ARGB32);
-    const char* ptr = dbusImage.pixels.constData();
-    int byteWidth = dbusImage.width * 4;
-    for (int y = 0; y < dbusImage.height; ++y, ptr += byteWidth) {
-        memcpy(img.scanLine(y), ptr, byteWidth);
+
+    const quint32* srcPtr = reinterpret_cast<const quint32*>(dbusImage.pixels.constData());
+    for (int y = 0; y < dbusImage.height; ++y) {
+        quint32* dstPtr = reinterpret_cast<quint32*>(img.scanLine(y));
+        quint32* dstEnd = dstPtr + dbusImage.width;
+        for (; dstPtr != dstEnd; ++dstPtr, ++srcPtr) {
+            *dstPtr = ntohl(*srcPtr);
+        }
     }
     return img;
 }
