@@ -40,19 +40,23 @@ static QImage qImageFromDBusImage(const DBusImage& dbusImage)
     return img;
 }
 
+static QImage createTestImage(int width, int height)
+{
+    QImage img(width, height, QImage::Format_ARGB32);
+    QPainter painter(&img);
+    painter.setPen(Qt::blue);
+    painter.setBrush(Qt::green);
+    painter.drawRect(img.rect().adjusted(0, 0, -1, -1));
+    return img;
+}
+
 class DBusImageTest : public QObject
 {
 Q_OBJECT
 private Q_SLOTS:
     void testFromPixmap()
     {
-        QImage src(16, 16, QImage::Format_ARGB32);
-        {
-            QPainter painter(&src);
-            painter.setPen(Qt::blue);
-            painter.setBrush(Qt::green);
-            painter.drawRect(src.rect().adjusted(0, 0, -1, -1));
-        }
+        QImage src = createTestImage(16, 16);
         QPixmap pixmap = QPixmap::fromImage(src);
         DBusImage dbusImage = DBusImage::createFromPixmap(pixmap);
         QCOMPARE(dbusImage.width, src.width());
@@ -60,6 +64,26 @@ private Q_SLOTS:
 
         QImage result = qImageFromDBusImage(dbusImage);
         QCOMPARE(result, src);
+    }
+
+    void testListFromIcon()
+    {
+        QIcon icon;
+        QImage src16 = createTestImage(16, 16);
+        QImage src22 = createTestImage(22, 22);
+        icon.addPixmap(QPixmap::fromImage(src16));
+        icon.addPixmap(QPixmap::fromImage(src22));
+
+        DBusImageList list = DBusImage::createListFromIcon(icon);
+        QCOMPARE(list.count(), 2);
+
+        QImage result16 = qImageFromDBusImage(list[0]);
+        QImage result22 = qImageFromDBusImage(list[1]);
+        if (list[0].width == 22) {
+            qSwap(result16, result22);
+        }
+        QCOMPARE(src16, result16);
+        QCOMPARE(src22, result22);
     }
 };
 
