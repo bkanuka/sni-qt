@@ -3,7 +3,7 @@ macro(add_test_executable _test)
     set(_src ${ARGN})
     qt4_generate_moc(${_test}.cpp ${_test}.moc)
     qt4_automoc(${_src})
-    add_executable(${_test} ${_test}.cpp ${_test}.moc ${_src})
+    add_executable(${_test} ${_test}.cpp ${_test}.moc ${_src} ${test_RC})
     target_link_libraries(${_test} ${test_LIBRARIES})
 
     add_test(${_test} ${_test})
@@ -11,6 +11,8 @@ macro(add_test_executable _test)
 endmacro(add_test_executable)
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
+
+qt4_add_resources(test_RC test.qrc)
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../src

@@ -45,8 +45,27 @@ const QDBusArgument& operator>>(const QDBusArgument& argument, DBusImage& image)
 
 DBusImageList DBusImage::createListFromIcon(const QIcon& icon)
 {
+    if (icon.isNull()) {
+        qWarning("qt-sni: DBusImage::createListFromIcon() icon is null");
+        return DBusImageList();
+    }
+
     DBusImageList list;
-    Q_FOREACH(const QSize& size, icon.availableSizes()) {
+    QList<QSize> sizes = icon.availableSizes();
+    if (sizes.isEmpty()) {
+        // sizes can be empty if icon is an SVG. In this case generate images for a few sizes
+        #define SIZE(x) QSize(x, x)
+        sizes
+            << SIZE(16)
+            << SIZE(22)
+            << SIZE(24)
+            << SIZE(32)
+            << SIZE(48)
+            ;
+        #undef SIZE
+    }
+
+    Q_FOREACH(const QSize& size, sizes) {
         list << createFromPixmap(icon.pixmap(size));
     }
     return list;

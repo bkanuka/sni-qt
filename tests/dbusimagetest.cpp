@@ -85,6 +85,19 @@ private Q_SLOTS:
         QCOMPARE(src16, result16);
         QCOMPARE(src22, result22);
     }
+
+    void testListFromSvgIcon()
+    {
+        QIcon icon(":/images/heart.svg");
+        DBusImageList list = DBusImage::createListFromIcon(icon);
+        QCOMPARE(list.count(), 5);
+
+        QCOMPARE(list[0].width, 16);
+        QCOMPARE(list[1].width, 22);
+        QCOMPARE(list[2].width, 24);
+        QCOMPARE(list[3].width, 32);
+        QCOMPARE(list[4].width, 48);
+    }
 };
 
 QTEST_MAIN(DBusImageTest)
