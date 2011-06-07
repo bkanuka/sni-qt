@@ -46,6 +46,11 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_PROPERTY(quint32 WindowId READ windowId)
     Q_PROPERTY(QString IconName READ iconName)
     Q_PROPERTY(DBusImageList IconPixmap READ iconPixmap)
+    Q_PROPERTY(QString OverlayIconName READ overlayIconName)
+    Q_PROPERTY(DBusImageList OverlayIconPixmap READ overlayIconPixmap)
+    Q_PROPERTY(QString AttentionIconName READ attentionIconName)
+    Q_PROPERTY(DBusImageList AttentionIconPixmap READ attentionIconPixmap)
+    Q_PROPERTY(QString AttentionMovieName READ attentionMovieName)
     Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
     StatusNotifierItem(QSystemTrayIcon*);
@@ -76,6 +81,11 @@ public:
     quint32 windowId() const { return 0; }
     QString iconName() const;
     DBusImageList iconPixmap() const;
+    QString overlayIconName() const { return QString(); }
+    DBusImageList overlayIconPixmap() const { return DBusImageList(); }
+    QString attentionIconName() const { return QString(); }
+    DBusImageList attentionIconPixmap() const { return DBusImageList(); }
+    QString attentionMovieName() const { return QString(); }
     QDBusObjectPath menu() const;
 
 Q_SIGNALS:
