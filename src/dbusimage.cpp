@@ -22,6 +22,10 @@
 
 // Qt
 #include <QDBusArgument>
+#include <QDebug>
+#include <QIcon>
+#include <QImage>
+#include <QPixmap>
 
 QDBusArgument& operator<<(QDBusArgument& argument, const DBusImage& image)
 {
@@ -37,4 +41,30 @@ const QDBusArgument& operator>>(const QDBusArgument& argument, DBusImage& image)
     argument >> image.width >> image.height >> image.pixels;
     argument.endStructure();
     return argument;
+}
+
+DBusImageList DBusImage::createListFromIcon(const QIcon& icon)
+{
+    DBusImageList list;
+    Q_FOREACH(const QSize& size, icon.availableSizes()) {
+        list << createFromPixmap(icon.pixmap(size));
+    }
+    return list;
+}
+
+DBusImage DBusImage::createFromPixmap(const QPixmap& pixmap)
+{
+    QImage image = pixmap.toImage().convertToFormat(QImage::Format_ARGB32);
+    DBusImage dbusImage;
+    dbusImage.width = pixmap.width();
+    dbusImage.height = pixmap.height();
+
+    dbusImage.pixels.resize(dbusImage.width * dbusImage.height * 4);
+    char* ptr = dbusImage.pixels.data();
+    const int byteWidth = dbusImage.width * 4;
+    for (int y=0; y < dbusImage.height; ++y, ptr += byteWidth) {
+        memcpy(ptr, image.constScanLine(y), byteWidth);
+    }
+
+    return dbusImage;
 }

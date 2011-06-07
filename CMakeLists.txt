@@ -33,3 +33,4 @@ pkg_check_modules(DBUSMENUQT REQUIRED dbusmenu-qt)
 
 # Source
 add_subdirectory(src)
+add_subdirectory(tests)
