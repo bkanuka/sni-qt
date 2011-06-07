@@ -21,7 +21,13 @@
 #ifndef STATUSNOTIFIERITEMFACTORY_H
 #define STATUSNOTIFIERITEMFACTORY_H
 
+// Local
 #include <private/qabstractsystemtrayiconsys_p.h>
+
+// Qt
+#include <QSet>
+
+class StatusNotifierItem;
 
 class StatusNotifierItemFactory : public QSystemTrayIconSysFactoryInterface
 {
@@ -35,11 +41,14 @@ public:
 private Q_SLOTS:
     void slotSnwOwnerChanged(const QString&, const QString&, const QString&);
     void slotHostRegisteredWithSnw();
+    void slotItemDestroyed(QObject*);
 
 private:
     bool m_isAvailable;
+    QSet<StatusNotifierItem*> m_items;
 
     void connectToSnw();
+    void registerItem(StatusNotifierItem*);
 };
 
 #endif /* STATUSNOTIFIERITEMFACTORY_H */

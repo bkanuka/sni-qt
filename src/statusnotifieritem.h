@@ -29,21 +29,32 @@
 
 // Qt
 #include <QObject>
+#include <QScopedPointer>
+
+class QDBusObjectPath;
+
+class DBusMenuExporter;
 
 class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.StatusNotifierItem")
     Q_PROPERTY(QString IconName READ iconName)
+    Q_PROPERTY(QString Id READ id)
+    Q_PROPERTY(QString Title READ title)
+    Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
     StatusNotifierItem(QSystemTrayIcon*);
     ~StatusNotifierItem();
+
+    QString objectPath() const;
 
     // QAbstractSystemTrayIconSys
     QRect geometry() const;
     void updateVisibility();
     void updateIcon();
     void updateToolTip();
+    void updateMenu();
     void showMessage(const QString &message, const QString &title,
         QSystemTrayIcon::MessageIcon icon, int msecs);
     /// QAbstractSystemTrayIconSys
@@ -55,7 +66,16 @@ public:
     void SecondaryActivate(int, int);
 
     QString iconName() const;
+    QString id() const;
+    QString title() const;
+    QDBusObjectPath menu() const;
     // /StatusNotifierItem
+
+private:
+    QString m_objectPath;
+    QScopedPointer<DBusMenuExporter> m_dbusMenuExporter;
+
+    QString menuObjectPath() const;
 };
 
 #endif // STATUSNOTIFIERITEM_H

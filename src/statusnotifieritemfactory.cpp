@@ -68,13 +68,20 @@ void StatusNotifierItemFactory::connectToSnw()
         return;
     }
     m_isAvailable = value.toBool();
-
     qDebug() << "m_isAvailable" << m_isAvailable;
+
+    Q_FOREACH(StatusNotifierItem* item, m_items) {
+        registerItem(item);
+    }
 }
 
 QAbstractSystemTrayIconSys *StatusNotifierItemFactory::create(QSystemTrayIcon *trayIcon)
 {
-    return new StatusNotifierItem(trayIcon);
+    StatusNotifierItem* item = new StatusNotifierItem(trayIcon);
+    connect(item, SIGNAL(destroyed(QObject*)), SLOT(slotItemDestroyed(QObject*)));
+    m_items.insert(item);
+    registerItem(item);
+    return item;
 }
 
 bool StatusNotifierItemFactory::isAvailable() const
@@ -104,6 +111,19 @@ void StatusNotifierItemFactory::slotHostRegisteredWithSnw()
         availableChanged(m_isAvailable);
     }
 }
+
+void StatusNotifierItemFactory::slotItemDestroyed(QObject* obj)
+{
+    m_items.remove(static_cast<StatusNotifierItem*>(obj));
+}
+
+void StatusNotifierItemFactory::registerItem(StatusNotifierItem* item)
+{
+    qDebug() << "RegisterStatusNotifierItem" << item->objectPath();
+    QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_IFACE);
+    snw.asyncCall("RegisterStatusNotifierItem", item->objectPath());
+}
+
 
 Q_EXPORT_PLUGIN2(statusnotifieritem, StatusNotifierItemFactory)
 

@@ -27,6 +27,7 @@
 #include <dbusmenuexporter.h>
 
 // Qt
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusMetaType>
 #include <QDebug>
@@ -48,11 +49,13 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
     registerMetaTypes();
 
     static int id = 1;
-    QString objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
+    m_objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
 
     StatusNotifierItemAdaptor* adaptor = new StatusNotifierItemAdaptor(this);
     QDBusConnection bus = QDBusConnection::sessionBus();
-    bus.registerObject(objectPath, adaptor, QDBusConnection::ExportAllContents);
+    bus.registerObject(m_objectPath, adaptor, QDBusConnection::ExportAllContents);
+
+    updateMenu();
 }
 
 StatusNotifierItem::~StatusNotifierItem()
@@ -76,6 +79,17 @@ void StatusNotifierItem::updateIcon()
 void StatusNotifierItem::updateToolTip()
 {
     qDebug() << __FUNCTION__;
+}
+
+void StatusNotifierItem::updateMenu()
+{
+    qDebug() << __FUNCTION__;
+    QMenu* menu = trayIcon->contextMenu();
+    if (!menu) {
+        m_dbusMenuExporter.reset();
+        return;
+    }
+    m_dbusMenuExporter.reset(new DBusMenuExporter(menuObjectPath(), menu));
 }
 
 void StatusNotifierItem::showMessage(const QString &message, const QString &title,
@@ -103,6 +117,33 @@ void StatusNotifierItem::SecondaryActivate(int, int)
 QString StatusNotifierItem::iconName() const
 {
     return "konqueror";
+}
+
+QString StatusNotifierItem::objectPath() const
+{
+    return m_objectPath;
+}
+
+QString StatusNotifierItem::id() const
+{
+    return QCoreApplication::applicationName();
+}
+
+QString StatusNotifierItem::title() const
+{
+    return QCoreApplication::applicationName();
+}
+
+QDBusObjectPath StatusNotifierItem::menu() const
+{
+    return m_dbusMenuExporter
+        ? QDBusObjectPath(menuObjectPath())
+        : QDBusObjectPath("/invalid");
+}
+
+QString StatusNotifierItem::menuObjectPath() const
+{
+    return objectPath() + "/menu";
 }
 
 #include <statusnotifieritem.moc>

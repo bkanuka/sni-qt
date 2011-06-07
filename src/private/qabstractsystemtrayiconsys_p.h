@@ -60,10 +60,11 @@
 
 class QAbstractSystemTrayIconSys;
 
-class QSystemTrayIconSysFactoryInterface : public QObject, public QFactoryInterface
+class Q_GUI_EXPORT QSystemTrayIconSysFactoryInterface : public QObject, public QFactoryInterface
 {
     Q_OBJECT
 public:
+    QSystemTrayIconSysFactoryInterface();
     virtual QAbstractSystemTrayIconSys * create(QSystemTrayIcon *) = 0;
     virtual bool isAvailable() const = 0;
 
@@ -93,6 +94,7 @@ public:
     virtual void updateVisibility() = 0;
     virtual void updateIcon() = 0;
     virtual void updateToolTip() = 0;
+    virtual void updateMenu() = 0;
     virtual void showMessage(const QString &message, const QString &title,
                      QSystemTrayIcon::MessageIcon icon, int msecs) = 0;
 
