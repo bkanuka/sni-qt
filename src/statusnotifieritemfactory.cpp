@@ -39,9 +39,9 @@ static const char *SNW_PATH    = "/StatusNotifierWatcher";
 
 StatusNotifierItemFactory::StatusNotifierItemFactory()
 : m_iconCacheDir(FsUtils::generateTempDir("qt-sni"))
-, m_iconCache(new IconCache(m_iconCacheDir, this))
 , m_isAvailable(false)
 {
+    m_iconCache = new IconCache(m_iconCacheDir, this);
     qDebug() << __FUNCTION__;
     QDBusServiceWatcher* snwWatcher = new QDBusServiceWatcher(this);
     snwWatcher->addWatchedService(SNW_SERVICE);
