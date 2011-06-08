@@ -35,6 +35,8 @@ class QDBusObjectPath;
 
 class DBusMenuExporter;
 
+class IconCache;
+
 class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
 {
     Q_OBJECT
@@ -44,6 +46,7 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_PROPERTY(QString Title READ title)
     Q_PROPERTY(QString Status READ status)
     Q_PROPERTY(quint32 WindowId READ windowId)
+    Q_PROPERTY(QString IconThemePath READ iconThemePath)
     Q_PROPERTY(QString IconName READ iconName)
     Q_PROPERTY(DBusImageList IconPixmap READ iconPixmap)
     Q_PROPERTY(QString OverlayIconName READ overlayIconName)
@@ -54,7 +57,7 @@ class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
     Q_PROPERTY(DBusToolTip ToolTip READ toolTip)
     Q_PROPERTY(QDBusObjectPath Menu READ menu)
 public:
-    StatusNotifierItem(QSystemTrayIcon*);
+    StatusNotifierItem(QSystemTrayIcon*, IconCache*);
     ~StatusNotifierItem();
 
     QString objectPath() const;
@@ -80,8 +83,9 @@ public:
     QString title() const;
     QString status() const;
     quint32 windowId() const { return 0; }
+    QString iconThemePath() const;
     QString iconName() const;
-    DBusImageList iconPixmap() const;
+    DBusImageList iconPixmap() const { return DBusImageList(); }
     QString overlayIconName() const { return QString(); }
     DBusImageList overlayIconPixmap() const { return DBusImageList(); }
     QString attentionIconName() const { return QString(); }
@@ -98,8 +102,8 @@ Q_SIGNALS:
 
 private:
     QString m_objectPath;
-    QScopedPointer<DBusMenuExporter> m_dbusMenuExporter;
-    DBusImageList m_iconPixmap;
+    IconCache* m_iconCache;
+    DBusMenuExporter* m_dbusMenuExporter;
 
     QString menuObjectPath() const;
 };
