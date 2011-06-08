@@ -36,3 +36,4 @@ set(test_LIBRARIES
 enable_testing()
 
 add_test_executable(dbusimagetest ../src/dbusimage.cpp)
+add_test_executable(fsutilstest ../src/fsutils.cpp)

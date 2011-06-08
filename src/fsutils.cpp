@@ -20,15 +20,64 @@
 */
 #include <fsutils.h>
 
+// Qt
+#include <QDebug>
+#include <QDir>
+#include <QFile>
+
+// libc
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
 namespace FsUtils {
 
 QString generateTempDir(const QString& prefix)
 {
-    return QString();
+    QDir dir = QDir::temp();
+    if (!dir.mkpath(".")) {
+        qCritical("Failed to generate temporary file for prefix %s: could not create %s",
+            qPrintable(prefix), qPrintable(dir.path()));
+        return QString();
+    }
+
+    QString tmpl = QString("%1/%2-XXXXXX")
+        .arg(dir.path())
+        .arg(prefix);
+    const char* name = mkdtemp(QFile::encodeName(tmpl).data());
+    if (!name) {
+        qCritical("Failed to generate temporary file for prefix %s: %s",
+            qPrintable(prefix), strerror(errno));
+        return QString();
+    }
+    return QFile::encodeName(name);
 }
 
-void recursiveRm(const QString& dir)
+bool recursiveRm(const QString& dirName)
 {
+    bool ok;
+    QDir dir(dirName);
+    dir.setFilter(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Hidden | QDir::System);
+    Q_FOREACH(const QFileInfo& info, dir.entryInfoList()) {
+        if (info.isDir()) {
+            ok = recursiveRm(info.filePath());
+            if (!ok) {
+                return false;
+            }
+        } else {
+            ok = dir.remove(info.fileName());
+            if (!ok) {
+                qCritical("Failed to remove file %s", qPrintable(info.filePath()));
+                return false;
+            }
+        }
+    }
+    ok = dir.rmdir(dir.path());
+    if (!ok) {
+        qCritical("Failed to remove empty dir %s", qPrintable(dir.path()));
+        return false;
+    }
+    return true;
 }
 
 } // namespace

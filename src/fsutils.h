@@ -28,7 +28,7 @@ namespace FsUtils {
 
 QString generateTempDir(const QString& prefix);
 
-void recursiveRm(const QString& dir);
+bool recursiveRm(const QString& dirName);
 
 } // namespace
 
