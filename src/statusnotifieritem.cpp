@@ -21,6 +21,7 @@
 #include "statusnotifieritem.h"
 
 // Local
+#include <iconcache.h>
 #include <statusnotifieritemadaptor.h>
 
 // dbusmenu-qt
@@ -46,8 +47,9 @@ void registerMetaTypes()
     qDBusRegisterMetaType<DBusToolTip>();
 }
 
-StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon)
+StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCache)
 : QAbstractSystemTrayIconSys(icon)
+, m_iconCache(iconCache)
 {
     registerMetaTypes();
 
@@ -76,7 +78,6 @@ void StatusNotifierItem::updateVisibility()
 
 void StatusNotifierItem::updateIcon()
 {
-    m_iconPixmap.clear();
     NewIcon();
     // ToolTip contains the icon
     NewToolTip();
@@ -120,9 +121,23 @@ void StatusNotifierItem::SecondaryActivate(int, int)
 {
 }
 
+QString StatusNotifierItem::iconThemePath() const
+{
+    return m_iconCache->themePath();
+}
+
 QString StatusNotifierItem::iconName() const
 {
-    return trayIcon->icon().name();
+    QIcon icon = trayIcon->icon();
+    if (icon.isNull()) {
+        return QString();
+    }
+    QString name = icon.name();
+    if (!name.isEmpty()) {
+        return name;
+    }
+
+    return m_iconCache->nameForIcon(icon);
 }
 
 QString StatusNotifierItem::objectPath() const
@@ -181,24 +196,10 @@ QString StatusNotifierItem::status() const
     return trayIcon->isVisible() ? "Active" : "Passive";
 }
 
-DBusImageList StatusNotifierItem::iconPixmap() const
-{
-    if (!iconName().isEmpty()) {
-        return DBusImageList();
-    }
-    if (m_iconPixmap.isEmpty()) {
-        const_cast<StatusNotifierItem*>(this)->m_iconPixmap = DBusImage::createListFromIcon(trayIcon->icon());
-    }
-    return m_iconPixmap;
-}
-
 DBusToolTip StatusNotifierItem::toolTip() const
 {
     DBusToolTip tip;
     tip.iconName = iconName();
-    if (tip.iconName.isEmpty()) {
-        tip.iconPixmap = iconPixmap();
-    }
     tip.title = trayIcon->toolTip();
     return tip;
 }

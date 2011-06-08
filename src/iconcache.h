@@ -18,41 +18,29 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef STATUSNOTIFIERITEMFACTORY_H
-#define STATUSNOTIFIERITEMFACTORY_H
-
-// Local
-#include <private/qabstractsystemtrayiconsys_p.h>
+#ifndef ICONCACHE_H
+#define ICONCACHE_H
 
 // Qt
-#include <QSet>
+#include <QObject>
 
-class IconCache;
-class StatusNotifierItem;
+class QIcon;
 
-class StatusNotifierItemFactory : public QSystemTrayIconSysFactoryInterface
+/**
+ * This class will save pixmaps from icons in a temporary dir on the disk,
+ * making it possible to pass filenames for icons without names.
+ */
+class IconCache : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(QSystemTrayIconSysFactoryInterface:QFactoryInterface)
 public:
-    StatusNotifierItemFactory();
-    ~StatusNotifierItemFactory();
-    QAbstractSystemTrayIconSys * create(QSystemTrayIcon *trayIcon);
-    bool isAvailable() const;
+    IconCache(const QString& baseDir, QObject* parent);
 
-private Q_SLOTS:
-    void slotSnwOwnerChanged(const QString&, const QString&, const QString&);
-    void slotHostRegisteredWithSnw();
-    void slotItemDestroyed(QObject*);
+    QString themePath() const;
+
+    QString nameForIcon(const QIcon& icon) const;
 
 private:
-    QString m_iconCacheDir;
-    IconCache* m_iconCache;
-    bool m_isAvailable;
-    QSet<StatusNotifierItem*> m_items;
-
-    void connectToSnw();
-    void registerItem(StatusNotifierItem*);
 };
 
-#endif /* STATUSNOTIFIERITEMFACTORY_H */
+#endif /* ICONCACHE_H */

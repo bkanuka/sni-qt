@@ -21,6 +21,8 @@
 #include <statusnotifieritemfactory.h>
 
 // Local
+#include <iconcache.h>
+#include <fsutils.h>
 #include <statusnotifieritem.h>
 
 // Qt
@@ -36,7 +38,9 @@ static const char *SNW_IFACE   = "org.kde.StatusNotifierWatcher";
 static const char *SNW_PATH    = "/StatusNotifierWatcher";
 
 StatusNotifierItemFactory::StatusNotifierItemFactory()
-: m_isAvailable(false)
+: m_iconCacheDir(FsUtils::generateTempDir("qt-sni"))
+, m_iconCache(new IconCache(m_iconCacheDir, this))
+, m_isAvailable(false)
 {
     qDebug() << __FUNCTION__;
     QDBusServiceWatcher* snwWatcher = new QDBusServiceWatcher(this);
@@ -46,6 +50,11 @@ StatusNotifierItemFactory::StatusNotifierItemFactory()
     snwWatcher->setConnection(QDBusConnection::sessionBus());
 
     connectToSnw();
+}
+
+StatusNotifierItemFactory::~StatusNotifierItemFactory()
+{
+    FsUtils::recursiveRm(m_iconCacheDir);
 }
 
 void StatusNotifierItemFactory::connectToSnw()
@@ -77,7 +86,7 @@ void StatusNotifierItemFactory::connectToSnw()
 
 QAbstractSystemTrayIconSys *StatusNotifierItemFactory::create(QSystemTrayIcon *trayIcon)
 {
-    StatusNotifierItem* item = new StatusNotifierItem(trayIcon);
+    StatusNotifierItem* item = new StatusNotifierItem(trayIcon, m_iconCache);
     connect(item, SIGNAL(destroyed(QObject*)), SLOT(slotItemDestroyed(QObject*)));
     m_items.insert(item);
     registerItem(item);
