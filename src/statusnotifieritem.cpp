@@ -50,6 +50,7 @@ void registerMetaTypes()
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCache)
 : QAbstractSystemTrayIconSys(icon)
 , m_iconCache(iconCache)
+, m_dbusMenuExporter(0)
 {
     registerMetaTypes();
 
@@ -91,12 +92,12 @@ void StatusNotifierItem::updateToolTip()
 void StatusNotifierItem::updateMenu()
 {
     qDebug() << __FUNCTION__;
+    delete m_dbusMenuExporter;
     QMenu* menu = trayIcon->contextMenu();
     if (!menu) {
-        m_dbusMenuExporter.reset();
         return;
     }
-    m_dbusMenuExporter.reset(new DBusMenuExporter(menuObjectPath(), menu));
+    m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath(), menu);
 }
 
 void StatusNotifierItem::showMessage(const QString &message, const QString &title,

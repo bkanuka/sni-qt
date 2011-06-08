@@ -102,8 +102,8 @@ Q_SIGNALS:
 
 private:
     QString m_objectPath;
-    QScopedPointer<DBusMenuExporter> m_dbusMenuExporter;
     IconCache* m_iconCache;
+    DBusMenuExporter* m_dbusMenuExporter;
 
     QString menuObjectPath() const;
 };
