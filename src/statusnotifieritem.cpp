@@ -91,7 +91,6 @@ void StatusNotifierItem::updateToolTip()
 
 void StatusNotifierItem::updateMenu()
 {
-    qDebug() << __FUNCTION__;
     delete m_dbusMenuExporter;
     QMenu* menu = trayIcon->contextMenu();
     if (!menu) {
@@ -103,7 +102,6 @@ void StatusNotifierItem::updateMenu()
 void StatusNotifierItem::showMessage(const QString &message, const QString &title,
     QSystemTrayIcon::MessageIcon icon, int msecs)
 {
-    qDebug() << __FUNCTION__ << message;
 }
 
 void StatusNotifierItem::Activate(int, int)

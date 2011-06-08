@@ -42,7 +42,6 @@ StatusNotifierItemFactory::StatusNotifierItemFactory()
 , m_isAvailable(false)
 {
     m_iconCache = new IconCache(m_iconCacheDir, this);
-    qDebug() << __FUNCTION__;
     QDBusServiceWatcher* snwWatcher = new QDBusServiceWatcher(this);
     snwWatcher->addWatchedService(SNW_SERVICE);
     connect(snwWatcher, SIGNAL(serviceOwnerChanged(const QString&, const QString&, const QString&)),
@@ -62,7 +61,6 @@ void StatusNotifierItemFactory::connectToSnw()
     m_isAvailable = false;
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_IFACE);
     if (!snw.isValid()) {
-        qDebug() << "!snw.isValid";
         return;
     }
 
@@ -77,7 +75,6 @@ void StatusNotifierItemFactory::connectToSnw()
         return;
     }
     m_isAvailable = value.toBool();
-    qDebug() << "m_isAvailable" << m_isAvailable;
 
     Q_FOREACH(StatusNotifierItem* item, m_items) {
         registerItem(item);
@@ -100,7 +97,6 @@ bool StatusNotifierItemFactory::isAvailable() const
 
 void StatusNotifierItemFactory::slotSnwOwnerChanged(const QString&, const QString&, const QString& newOwner)
 {
-    qDebug() << __FUNCTION__ << newOwner;
     bool oldAvailable = m_isAvailable;
     if (newOwner.isEmpty()) {
         m_isAvailable = false;
@@ -128,7 +124,6 @@ void StatusNotifierItemFactory::slotItemDestroyed(QObject* obj)
 
 void StatusNotifierItemFactory::registerItem(StatusNotifierItem* item)
 {
-    qDebug() << "RegisterStatusNotifierItem" << item->objectPath();
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_IFACE);
     snw.asyncCall("RegisterStatusNotifierItem", item->objectPath());
 }
