@@ -44,7 +44,8 @@ QString generateTempDir(const QString& prefix)
     QString tmpl = QString("%1/%2-XXXXXX")
         .arg(dir.path())
         .arg(prefix);
-    const char* name = mkdtemp(QFile::encodeName(tmpl).data());
+    QByteArray ba = QFile::encodeName(tmpl);
+    const char* name = mkdtemp(ba.data());
     if (!name) {
         qCritical("Failed to generate temporary file for prefix %s: %s",
             qPrintable(prefix), strerror(errno));
