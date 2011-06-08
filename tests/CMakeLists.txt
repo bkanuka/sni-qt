@@ -37,3 +37,4 @@ enable_testing()
 
 add_test_executable(dbusimagetest ../src/dbusimage.cpp)
 add_test_executable(fsutilstest ../src/fsutils.cpp)
+add_test_executable(iconcachetest ../src/iconcache.cpp ../src/fsutils.cpp)
