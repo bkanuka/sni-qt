@@ -22,6 +22,7 @@ add_custom_target(distcheck
     && cd ${ARCHIVE_NAME}/build
     && cmake -DCMAKE_INSTALL_PREFIX=../install ..
     && make
+    && make check
     && make install
     )
 add_dependencies(distcheck dist)
