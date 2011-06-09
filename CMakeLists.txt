@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.8.0)
 # Versions
 set(sni_qt_VERSION_MAJOR 0)
 set(sni_qt_VERSION_MINOR 1)
-set(sni_qt_VERSION_PATCH 1)
+set(sni_qt_VERSION_PATCH 2)
 set(sni_qt_VERSION ${sni_qt_VERSION_MAJOR}.${sni_qt_VERSION_MINOR}.${sni_qt_VERSION_PATCH})
 
 # Packaging
