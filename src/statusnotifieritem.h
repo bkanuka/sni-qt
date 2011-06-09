@@ -1,7 +1,7 @@
 /* This file is part of the sni-qt project
    Copyright 2011 Canonical
    Author: Aurelien Gateau <aurelien.gateau@canonical.com>
- 
+
    sni-qt is free software; you can redistribute it and/or modify it under the
    terms of the GNU General Public License (GPL) as published by the Free
    Software Foundation; version 3 of the License.
