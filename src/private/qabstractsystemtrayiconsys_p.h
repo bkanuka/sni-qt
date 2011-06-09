@@ -95,7 +95,7 @@ public:
     virtual void updateIcon() = 0;
     virtual void updateToolTip() = 0;
     virtual void updateMenu() = 0;
-    virtual void showMessage(const QString &message, const QString &title,
+    virtual void showMessage(const QString &title, const QString &message,
                      QSystemTrayIcon::MessageIcon icon, int msecs) = 0;
 
     void sendActivated(QSystemTrayIcon::ActivationReason);

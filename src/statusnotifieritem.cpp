@@ -32,6 +32,10 @@
 static const char* SNI_CATEGORY_PROPERTY = "_qt_sni_category";
 static const char* DEFAULT_CATEGORY = "ApplicationStatus";
 
+static const char* NOTIFICATION_INTERFACE = "org.freedesktop.Notifications";
+static const char* NOTIFICATION_SERVICE = "org.freedesktop.Notifications";
+static const char* NOTIFICATION_PATH = "/org/freedesktop/Notifications";
+
 void registerMetaTypes()
 {
     static bool registered = false;
@@ -95,9 +99,35 @@ void StatusNotifierItem::updateMenu()
     m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath(), menu);
 }
 
-void StatusNotifierItem::showMessage(const QString &message, const QString &title,
+void StatusNotifierItem::showMessage(const QString &title, const QString &message,
     QSystemTrayIcon::MessageIcon icon, int msecs)
 {
+    QString iconString;
+    switch (icon) {
+    case QSystemTrayIcon::NoIcon:
+        break;
+    case QSystemTrayIcon::Information:
+        iconString = "dialog-information";
+        break;
+    case QSystemTrayIcon::Warning:
+        iconString = "dialog-warning";
+        break;
+    case QSystemTrayIcon::Critical:
+        iconString = "dialog-error";
+        break;
+    }
+
+    QDBusInterface iface(NOTIFICATION_SERVICE, NOTIFICATION_PATH, NOTIFICATION_INTERFACE);
+    iface.asyncCall("Notify",
+        id(),
+        quint32(0),    // replaces_id
+        iconString,
+        title,
+        message,
+        QStringList(), // actions
+        QVariantMap(), // hints
+        msecs
+        );
 }
 
 void StatusNotifierItem::Activate(int, int)

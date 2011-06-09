@@ -63,7 +63,7 @@ public:
     void updateIcon();
     void updateToolTip();
     void updateMenu();
-    void showMessage(const QString &message, const QString &title,
+    void showMessage(const QString &title, const QString &message,
         QSystemTrayIcon::MessageIcon icon, int msecs);
     /// QAbstractSystemTrayIconSys
 
