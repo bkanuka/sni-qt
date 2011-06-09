@@ -1,0 +1,15 @@
+# Summary
+
+This plugin makes Qt applications use the StatusNotifierItem protocol for their
+system tray icons. It does so by turning system tray icons created with the
+QSystemTrayIcon class into StatusNotifierItems.
+
+You *need* a patched Qt for this to work. The patch is available on Gitorious:
+
+  https://gitorious.org/~agateau/qt/agateau-qt
+
+In the sni-4.7 branch.
+
+# Author
+
+Canonical DX Team, Aurélien Gâteau <aurelien.gateau@canonical.com>
