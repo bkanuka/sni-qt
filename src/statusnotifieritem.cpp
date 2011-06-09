@@ -106,6 +106,7 @@ void StatusNotifierItem::showMessage(const QString &message, const QString &titl
 
 void StatusNotifierItem::Activate(int, int)
 {
+    sendActivated(QSystemTrayIcon::Trigger);
 }
 
 void StatusNotifierItem::ContextMenu(int, int)
@@ -118,6 +119,7 @@ void StatusNotifierItem::Scroll(int, const QString&)
 
 void StatusNotifierItem::SecondaryActivate(int, int)
 {
+    sendActivated(QSystemTrayIcon::MiddleClick);
 }
 
 QString StatusNotifierItem::iconThemePath() const

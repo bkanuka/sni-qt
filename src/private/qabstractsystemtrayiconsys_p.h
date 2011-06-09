@@ -98,6 +98,7 @@ public:
     virtual void showMessage(const QString &message, const QString &title,
                      QSystemTrayIcon::MessageIcon icon, int msecs) = 0;
 
+    void sendActivated(QSystemTrayIcon::ActivationReason);
 
 protected:
     QSystemTrayIcon *trayIcon;
