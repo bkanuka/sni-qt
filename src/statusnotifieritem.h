@@ -40,7 +40,6 @@ class IconCache;
 class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.StatusNotifierItem")
     Q_PROPERTY(QString Category READ category)
     Q_PROPERTY(QString Id READ id)
     Q_PROPERTY(QString Title READ title)

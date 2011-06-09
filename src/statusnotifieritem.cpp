@@ -59,7 +59,7 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCac
 
     new StatusNotifierItemAdaptor(this);
     QDBusConnection bus = QDBusConnection::sessionBus();
-    bus.registerObject(m_objectPath, this, QDBusConnection::ExportAllContents);
+    bus.registerObject(m_objectPath, this, QDBusConnection::ExportAdaptors);
 
     updateMenu();
 }
