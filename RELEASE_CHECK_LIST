@@ -26,4 +26,4 @@ bzr tag $tag
 bzr push
 
 # Upload tarball
-lp-project-upload appmenu-qt $tag appmenu-qt-$tag.tar.bz2
+lp-project-upload sni-qt $tag sni-qt-$tag.tar.bz2
