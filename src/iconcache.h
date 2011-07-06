@@ -39,12 +39,15 @@ public:
 
     QString nameForIcon(const QIcon& icon) const;
 
+    // Internal, testing only
+    QList<qint64> cacheKeys() const { return m_cacheKeys; }
+
 private:
     QString m_themePath;
-    QList<qint64> m_cacheKeys;
+    mutable QList<qint64> m_cacheKeys;
 
-    void cacheIcon(const QIcon&);
-    void trimCache();
+    void cacheIcon(const QIcon&) const;
+    void trimCache() const;
 };
 
 #endif /* ICONCACHE_H */

@@ -48,15 +48,20 @@ QString IconCache::nameForIcon(const QIcon& icon) const
     }
 
     qint64 key = icon.cacheKey();
-    if (!m_cacheKeys.contains(key)) {
-        const_cast<IconCache*>(this)->cacheIcon(icon);
-        const_cast<IconCache*>(this)->trimCache();
+    QList<qint64>::iterator it = qFind(m_cacheKeys.begin(), m_cacheKeys.end(), key);
+    if (it == m_cacheKeys.end()) {
+        cacheIcon(icon);
+        trimCache();
+    } else {
+        // Place key at the end of list as it is the most recently accessed
+        m_cacheKeys.erase(it);
+        m_cacheKeys.append(key);
     }
 
     return QString::number(key);
 }
 
-void IconCache::trimCache()
+void IconCache::trimCache() const
 {
     QDir dir(m_themePath + "/hicolor");
     dir.setFilter(QDir::Dirs);
@@ -73,7 +78,7 @@ void IconCache::trimCache()
     }
 }
 
-void IconCache::cacheIcon(const QIcon& icon)
+void IconCache::cacheIcon(const QIcon& icon) const
 {
     qint64 key = icon.cacheKey();
     QList<QSize> sizes = icon.availableSizes();

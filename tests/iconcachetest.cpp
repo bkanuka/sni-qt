@@ -93,6 +93,7 @@ private Q_SLOTS:
     {
         IconCache cache(m_sandBoxDirName);
 
+        // Create more icons than cache can hold
         QList<int> sizes = QList<int>() << 16 << 22 << 32;
         const int extraCount = 4;
         const int count = IconCache::MaxIconCount + extraCount;
@@ -120,6 +121,31 @@ private Q_SLOTS:
             QCOMPARE(remainingNames.count(), IconCache::MaxIconCount);
             QCOMPARE(remainingNames, expectedRemainingNames);
         }
+    }
+
+    void testCacheOrder()
+    {
+        IconCache cache(m_sandBoxDirName);
+        QList<int> sizes = QList<int>() << 16 << 22 << 32;
+        QIcon icon1 = createTestIcon(sizes, Qt::red);
+        QIcon icon2 = createTestIcon(sizes, Qt::green);
+        QIcon icon3 = createTestIcon(sizes, Qt::blue);
+        cache.nameForIcon(icon1);
+        cache.nameForIcon(icon2);
+        cache.nameForIcon(icon3);
+
+        // cacheKeysBefore should contains keys for icon1, icon2, icon3
+        QList<qint64> cacheKeysBefore = cache.cacheKeys();
+
+        // Access icon1, this should place icon1 at the end of cacheKeys, ie:
+        // icon2, icon3, icon1
+        cache.nameForIcon(icon1);
+
+        QList<qint64> expectedCacheKeys = cacheKeysBefore;
+        expectedCacheKeys << expectedCacheKeys.takeFirst();
+
+        // Check the result
+        QCOMPARE(cache.cacheKeys(), expectedCacheKeys);
     }
 
 private:
