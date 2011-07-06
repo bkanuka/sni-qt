@@ -18,8 +18,7 @@
 #define ICONCACHE_H
 
 // Qt
-#include <QDateTime>
-#include <QHash>
+#include <QList>
 #include <QObject>
 
 class QIcon;
@@ -34,16 +33,18 @@ class IconCache : public QObject
 public:
     IconCache(const QString& baseDir, QObject* parent=0);
 
+    static const int MaxIconCount;
+
     QString themePath() const;
 
     QString nameForIcon(const QIcon& icon) const;
 
 private:
     QString m_themePath;
-    typedef QHash<qint64, QDateTime> Cache;
-    Cache m_cache;
+    QList<qint64> m_cacheKeys;
 
     void cacheIcon(const QIcon&);
+    void trimCache();
 };
 
 #endif /* ICONCACHE_H */

@@ -27,14 +27,24 @@
 #include <QPainter>
 #include <QtTestGui>
 
-static QImage createTestImage(int width, int height)
+static QImage createTestImage(int size, const QColor& color)
 {
-    QImage img(width, height, QImage::Format_ARGB32);
+    QImage img(size, size, QImage::Format_ARGB32);
     QPainter painter(&img);
-    painter.setPen(Qt::blue);
-    painter.setBrush(Qt::green);
+    painter.setPen(color.darker());
+    painter.setBrush(color);
     painter.drawRect(img.rect().adjusted(0, 0, -1, -1));
     return img;
+}
+
+static QIcon createTestIcon(const QList<int>& sizes, const QColor& color)
+{
+    QIcon icon;
+    Q_FOREACH(int size, sizes) {
+        QImage image = createTestImage(size, color);
+        icon.addPixmap(QPixmap::fromImage(image));
+    }
+    return icon;
 }
 
 class IconCacheTest : public QObject
@@ -68,13 +78,7 @@ private Q_SLOTS:
         IconCache cache(m_sandBoxDirName);
 
         QList<int> sizes = QList<int>() << 16 << 22 << 32;
-        QList<QImage> images;
-        QIcon icon;
-        Q_FOREACH(int size, sizes) {
-            QImage image = createTestImage(size, size);
-            images << image;
-            icon.addPixmap(QPixmap::fromImage(image));
-        }
+        QIcon icon = createTestIcon(sizes, Qt::red);
 
         QString name = cache.nameForIcon(icon);
         Q_FOREACH(int size, sizes) {
@@ -82,6 +86,39 @@ private Q_SLOTS:
             QVERIFY(QFile::exists(dirName));
             QImage image;
             QVERIFY(image.load(dirName + "/" + name + ".png"));
+        }
+    }
+
+    void testTrimCache()
+    {
+        IconCache cache(m_sandBoxDirName);
+
+        QList<int> sizes = QList<int>() << 16 << 22 << 32;
+        const int extraCount = 4;
+        const int count = IconCache::MaxIconCount + extraCount;
+        QStringList createdIconNames;
+        for (int idx = 0; idx < count; ++idx) {
+            QColor color = QColor::fromHsvF(double(idx) / count, 1., 1.);
+            QIcon icon = createTestIcon(sizes, color);
+            createdIconNames << cache.nameForIcon(icon);
+        }
+
+        // Create a QSet of the names which should still be there
+        QSet<QString> expectedRemainingNames;
+        auto it = createdIconNames.begin() + extraCount;
+        for (; it != createdIconNames.end(); ++it) {
+            expectedRemainingNames << *it + ".png";
+        }
+
+        // For each size, check the remaining icons are expectedRemainingNames
+        Q_FOREACH(int size, sizes) {
+            QString dirName = cache.themePath() + QString("/hicolor/%1x%1/apps").arg(size);
+            QVERIFY(QFile::exists(dirName));
+            QDir dir(dirName);
+            dir.setFilter(QDir::Files);
+            QSet<QString> remainingNames = dir.entryList().toSet();
+            QCOMPARE(remainingNames.count(), IconCache::MaxIconCount);
+            QCOMPARE(remainingNames, expectedRemainingNames);
         }
     }
 

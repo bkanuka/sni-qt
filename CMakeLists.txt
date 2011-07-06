@@ -32,6 +32,9 @@ find_package(PkgConfig REQUIRED)
 find_package(Qt4 REQUIRED)
 pkg_check_modules(DBUSMENUQT REQUIRED dbusmenu-qt)
 
+# Build flags
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual -Wall -std=c++0x")
+
 # Source
 add_subdirectory(src)
 add_subdirectory(tests)

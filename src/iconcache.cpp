@@ -21,6 +21,8 @@
 #include <QDir>
 #include <QIcon>
 
+const int IconCache::MaxIconCount = 10;
+
 IconCache::IconCache(const QString& baseDir, QObject* parent)
 : QObject(parent)
 , m_themePath(baseDir + "/icons")
@@ -46,11 +48,29 @@ QString IconCache::nameForIcon(const QIcon& icon) const
     }
 
     qint64 key = icon.cacheKey();
-    if (!m_cache.contains(key)) {
+    if (!m_cacheKeys.contains(key)) {
         const_cast<IconCache*>(this)->cacheIcon(icon);
+        const_cast<IconCache*>(this)->trimCache();
     }
 
     return QString::number(key);
+}
+
+void IconCache::trimCache()
+{
+    QDir dir(m_themePath + "/hicolor");
+    dir.setFilter(QDir::Dirs);
+
+    while (m_cacheKeys.count() > MaxIconCount) {
+        qint64 cacheKey = m_cacheKeys.takeFirst();
+
+        Q_FOREACH(const QString& sizeDir, dir.entryList()) {
+            QString iconSubPath = QString("%1/apps/%2.png").arg(sizeDir).arg(cacheKey);
+            if (dir.exists(iconSubPath)) {
+                dir.remove(iconSubPath);
+            }
+        }
+    }
 }
 
 void IconCache::cacheIcon(const QIcon& icon)
@@ -87,7 +107,7 @@ void IconCache::cacheIcon(const QIcon& icon)
         }
     }
 
-    m_cache.insert(key, QDateTime::currentDateTime());
+    m_cacheKeys << key;
 }
 
 #include <iconcache.moc>
