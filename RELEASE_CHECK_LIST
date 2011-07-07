@@ -15,8 +15,8 @@ bzr ci
 # Create and test tarball
 make distcheck
 
-# Test with some Qt apps (systray from Qt examples/desktop/systray dir,
-# Mumble...)
+# Run manual tests
+view tests/manual/TESTS
 
 # If ok, create tag
 tag=x.y.z
