@@ -1,0 +1,45 @@
+# Setup
+- Unity-based SNI host (unity-2d-panel + unity-panel-service)
+- KDE SNI host (plasma desktop or plasmoidviewer systemtray)
+- Started systray test program => heart icon shows in hosts
+
+# Icon support
+## changeIcon
+- Change icon to "Trash" (svg based) => hosts show trash icon
+- Change icon to "File Manager" (name based) => hosts show file manager icon
+
+## changeStatus
+- Uncheck "Show icon" => hosts hide icon
+- Check "Show icon" => hosts bring back icon
+
+# Tooltip support [KDE only]
+## changeTooltip
+- Mouse over SNI icon in SNI host => tooltip appears containing bigger heart
+  icon and "Heart" text
+- Change icon to "Trash" and mouse over SNI icon => tooltip now contains trash
+  icon and "Trash" text
+
+# Mouse support
+## showMenu
+- Trigger menu action (left or right click on unity-panel, right click on
+  plasmoid) => menu shows with following content:
+  - Minimize
+  - Maximize
+  - Restore (disabled)
+  - ----
+  - Quit
+- Select Quit => systray test program stops, icons disappear from hosts
+
+## scroll
+- Scroll with mouse wheel over icon => icon changes
+
+## activate [KDE only]
+- Left click on plasmoid => icon changes from Heart to Trash
+
+## secondaryActivate [KDE only]
+- Middle click on plasmoid => message box appears
+
+# Notifications
+## showNotification
+- For each "Ballon Message" type:
+  - Click the "Show Message" button => FDO notification appears with icon matching the type combobox
