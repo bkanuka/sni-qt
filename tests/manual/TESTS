@@ -1,16 +1,16 @@
 # Setup
-- Unity-based SNI host (unity-2d-panel + unity-panel-service)
-- KDE SNI host (plasma desktop or plasmoidviewer systemtray)
-- Started systray test program => heart icon shows in hosts
+- Unity-based SNI host (unity-2d-panel + unity-panel-service or unity 3d)
+  or KDE SNI host (plasma-desktop with systemtray applet)
+- Started systray test program => heart icon shows in host
 
 # Icon support
 ## changeIcon
-- Change icon to "Trash" (svg based) => hosts show trash icon
-- Change icon to "File Manager" (name based) => hosts show file manager icon
+- Change icon to "Trash" (svg based) => host shows trash icon
+- Change icon to "File Manager" (name based) => host shows file manager icon
 
 ## changeStatus
-- Uncheck "Show icon" => hosts hide icon
-- Check "Show icon" => hosts bring back icon
+- Uncheck "Show icon" => host hides icon
+- Check "Show icon" => host brings back icon
 
 # Tooltip support [KDE only]
 ## changeTooltip
@@ -34,10 +34,10 @@
 - Scroll with mouse wheel over icon => icon changes
 
 ## activate [KDE only]
-- Left click on plasmoid => icon changes from Heart to Trash
+- Left click on icon => icon changes from Heart to Trash
 
 ## secondaryActivate [KDE only]
-- Middle click on plasmoid => message box appears
+- Middle click on icon => message box appears
 
 # Notifications
 ## showNotification
