@@ -1,3 +1,8 @@
+# 0.2.0 - 2011.07.07
+- Added a triming feature to the icon cache to avoid flooding tmp dir
+- Added support for scroll events
+- Added manual tests, with a test program based on Qt systray example
+
 # 0.1.5 - 2011.07.01
 - Add LGPL license and Nokia LGPL exception.
 
