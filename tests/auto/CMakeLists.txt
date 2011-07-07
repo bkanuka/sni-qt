@@ -14,9 +14,10 @@ add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --verbose)
 
 qt4_add_resources(test_RC test.qrc)
 
+set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
+
 include_directories(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src
-    ${CMAKE_CURRENT_BINARY_DIR}/../src
+    ${SRC_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDE_DIR}
     ${QT_QTCORE_INCLUDE_DIR}
@@ -35,6 +36,6 @@ set(test_LIBRARIES
 
 enable_testing()
 
-add_test_executable(dbusimagetest ../src/dbusimage.cpp)
-add_test_executable(fsutilstest ../src/fsutils.cpp)
-add_test_executable(iconcachetest ../src/iconcache.cpp ../src/fsutils.cpp)
+add_test_executable(dbusimagetest ${SRC_DIR}/dbusimage.cpp)
+add_test_executable(fsutilstest ${SRC_DIR}/fsutils.cpp)
+add_test_executable(iconcachetest ${SRC_DIR}/iconcache.cpp ${SRC_DIR}/fsutils.cpp)

@@ -37,4 +37,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual -Wall -std=c++0x")
 
 # Source
 add_subdirectory(src)
-add_subdirectory(tests)
+add_subdirectory(tests/auto)
