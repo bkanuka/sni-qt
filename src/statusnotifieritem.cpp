@@ -24,10 +24,13 @@
 #include <dbusmenuexporter.h>
 
 // Qt
+#include <QApplication>
 #include <QCoreApplication>
+#include <QCursor>
 #include <QDBusConnection>
 #include <QDBusMetaType>
 #include <QDebug>
+#include <QWheelEvent>
 
 static const char* SNI_CATEGORY_PROPERTY = "_qt_sni_category";
 static const char* DEFAULT_CATEGORY = "ApplicationStatus";
@@ -139,8 +142,13 @@ void StatusNotifierItem::ContextMenu(int, int)
 {
 }
 
-void StatusNotifierItem::Scroll(int, const QString&)
+void StatusNotifierItem::Scroll(int delta, const QString& orientationString)
 {
+    QPoint globalPos = QCursor::pos();
+    QPoint pos;
+    Qt::Orientation orientation = orientationString == "horizontal" ? Qt::Horizontal : Qt::Vertical;
+    QWheelEvent event(pos, globalPos, delta, Qt::NoButton, Qt::NoModifier, orientation);
+    QApplication::sendEvent(trayIcon, &event);
 }
 
 void StatusNotifierItem::SecondaryActivate(int, int)
