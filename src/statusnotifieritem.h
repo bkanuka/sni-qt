@@ -25,7 +25,7 @@
 
 // Qt
 #include <QObject>
-#include <QScopedPointer>
+#include <QWeakPointer>
 
 class QDBusObjectPath;
 
@@ -98,7 +98,7 @@ Q_SIGNALS:
 private:
     QString m_objectPath;
     IconCache* m_iconCache;
-    DBusMenuExporter* m_dbusMenuExporter;
+    QWeakPointer<DBusMenuExporter> m_dbusMenuExporter;
 
     QString menuObjectPath() const;
 };

@@ -43,3 +43,10 @@
 ## showNotification
 - For each "Ballon Message" type:
   - Click the "Show Message" button => FDO notification appears with icon matching the type combobox
+
+# Robustness
+## handleSnwRestart
+- Restart process implementing StatusNotifierWatcher (killall indicator-application-service for Unity, killall kded4 for KDE)
+  => Icon reappears in hosts
+- Click icon => menu appears
+- Select Quit => test program exits

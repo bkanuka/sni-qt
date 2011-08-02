@@ -54,8 +54,8 @@ void registerMetaTypes()
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCache)
 : QAbstractSystemTrayIconSys(icon)
 , m_iconCache(iconCache)
-, m_dbusMenuExporter(0)
 {
+    SNI_VAR(this);
     registerMetaTypes();
 
     static int id = 1;
@@ -70,7 +70,18 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCac
 }
 
 StatusNotifierItem::~StatusNotifierItem()
-{}
+{
+    SNI_VAR(this);
+    // m_dbusMenuExporter is a child of the menu it exports, so we need to use
+    // a QWeakPointer to track it:
+    //
+    // - If StatusNotifierItem is deleted before menu, we must delete the
+    // exporter (otherwise we can't associate another exporter to it)
+    //
+    // - If the menu is deleted before StatusNotifierItem, then the exporter
+    // will already be gone when we reach this point.
+    delete m_dbusMenuExporter.data();
+}
 
 QRect StatusNotifierItem::geometry() const
 {
@@ -99,7 +110,8 @@ void StatusNotifierItem::updateToolTip()
 
 void StatusNotifierItem::updateMenu()
 {
-    delete m_dbusMenuExporter;
+    // Delete any exporter which could be attached to a previous menu
+    delete m_dbusMenuExporter.data();
     QMenu* menu = trayIcon->contextMenu();
     SNI_VAR(menu);
     if (!menu) {
