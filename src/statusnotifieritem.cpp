@@ -31,6 +31,8 @@
 #include <QDBusConnection>
 #include <QDBusMetaType>
 #include <QDebug>
+#include <QMenu>
+#include <QSettings>
 #include <QWheelEvent>
 
 static const char* SNI_CATEGORY_PROPERTY = "_qt_sni_category";
@@ -54,6 +56,7 @@ void registerMetaTypes()
 StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCache)
 : QAbstractSystemTrayIconSys(icon)
 , m_iconCache(iconCache)
+, m_activateAction(0)
 {
     SNI_VAR(this);
     registerMetaTypes();
@@ -117,6 +120,7 @@ void StatusNotifierItem::updateMenu()
     if (!menu) {
         return;
     }
+    connect(menu, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
     m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath(), menu);
 }
 
@@ -260,6 +264,45 @@ DBusToolTip StatusNotifierItem::toolTip() const
     tip.iconName = iconName();
     tip.title = trayIcon->toolTip();
     return tip;
+}
+
+void StatusNotifierItem::sendActivatedByTrigger()
+{
+    sendActivated(QSystemTrayIcon::Trigger);
+}
+
+static bool needsActivateAction()
+{
+    static int value = -1;
+    if (value == -1) {
+        QSettings settings("canonical", "sni-qt");
+        QString binaryName = QCoreApplication::applicationFilePath().section("/", -1);
+        QString key = QString("need-activate-action/%1").arg(binaryName);
+        value = settings.value(key).toBool() ? 1 : 0;
+    }
+    return value == 1;
+}
+
+void StatusNotifierItem::slotAboutToShow()
+{
+    SNI_DEBUG;
+    if (!m_activateAction) {
+        if (needsActivateAction()) {
+            m_activateAction = new QAction(this);
+            // Hack: reuse an existing Qt translation so we don't have to add
+            // translations ourself.
+            m_activateAction->setText(QApplication::translate("QApplication", "Activate"));
+            connect(m_activateAction, SIGNAL(triggered(bool)), SLOT(sendActivatedByTrigger()));
+        }
+    }
+    if (!m_activateAction) {
+        return;
+    }
+    QMenu* menu = qobject_cast<QMenu*>(sender());
+    SNI_RETURN_IF_FAIL(menu);
+    if (menu->actions().first() != m_activateAction) {
+        menu->insertAction(menu->actions().first(), m_activateAction);
+    }
 }
 
 #include <statusnotifieritem.moc>

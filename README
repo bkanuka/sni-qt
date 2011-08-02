@@ -27,6 +27,37 @@ So for example to create a "Hardware" SNI, one would write:
     icon->setProperty("_qt_sni_category", "Hardware");
     ...
 
+# QSystemTrayIcon::Trigger support
+When sni-qt receives the StatusNotifierItem::Activate() call, it simulates a
+left-click on the QSystemTrayIcon and emits
+QSystemTrayIcon::activated(QSystemTrayIcon::Trigger)
+
+Some implementations of the SNI protocol call StatusNotifierItem::Activate() on
+left click and show the context menu on right click. KDE behaves like this.
+
+Other implementations (Unity for example), only supports the context menu. This
+means the action which is normally triggered by left-clicking the icon must also
+be available in the context menu, otherwise it is not possible for the user to
+trigger it.
+
+In case an application does not provide an entry in its context menu to trigger
+the same action as left-clicking on the icon, you can tell sni-qt to add an
+"Activate" action at the top of the menu. This is configured in a file named
+'sni-qt.conf'. sni-qt will look for it in these dirs:
+
+- $HOME/.config/canonical
+- /etc/xdg/canonical
+
+This file should look like this:
+
+    [need-activate-action]
+    foo=1
+    bar=1
+
+Where 'foo' and 'bar' are the binary names of the applications which needs an
+"Activate" action. Setting the value to '0' will disable the action again (so
+you can override the system-wide file)
+
 # Build options
 
 run cmake with -DSNI_DEBUG_OUTPUT=ON to enable debug output.

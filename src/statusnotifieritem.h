@@ -27,6 +27,7 @@
 #include <QObject>
 #include <QWeakPointer>
 
+class QAction;
 class QDBusObjectPath;
 
 class DBusMenuExporter;
@@ -95,10 +96,15 @@ Q_SIGNALS:
     void NewToolTip();
     // /StatusNotifierItem
 
+private Q_SLOTS:
+    void slotAboutToShow();
+    void sendActivatedByTrigger();
+
 private:
     QString m_objectPath;
     IconCache* m_iconCache;
     QWeakPointer<DBusMenuExporter> m_dbusMenuExporter;
+    QAction* m_activateAction;
 
     QString menuObjectPath() const;
 };
