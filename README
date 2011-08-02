@@ -27,6 +27,10 @@ So for example to create a "Hardware" SNI, one would write:
     icon->setProperty("_qt_sni_category", "Hardware");
     ...
 
+# Build options
+
+run cmake with -DSNI_DEBUG_OUTPUT=ON to enable debug output.
+
 # Author
 
 Canonical DX Team, Aurélien Gâteau <aurelien.gateau@canonical.com>
