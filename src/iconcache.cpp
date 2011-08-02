@@ -16,6 +16,9 @@
 */
 #include <iconcache.h>
 
+// Local
+#include <fsutils.h>
+
 // Qt
 #include <QDebug>
 #include <QDir>
@@ -113,6 +116,10 @@ void IconCache::cacheIcon(const QIcon& icon) const
     }
 
     m_cacheKeys << key;
+
+    // Touch the theme path: GTK icon loading system checks the mtime of the
+    // dir to decide whether it should look for new icons in the theme dir.
+    FsUtils::touch(m_themePath);
 }
 
 #include <iconcache.moc>

@@ -28,7 +28,7 @@
 // libc
 #include <stdlib.h>
 
-static void touchFile(const QString& name)
+static void createEmptyFile(const QString& name)
 {
     QFile file(name);
     QVERIFY(file.open(QIODevice::WriteOnly));
@@ -69,14 +69,30 @@ private Q_SLOTS:
         QVERIFY(dir.mkpath("dir/dir2"));
         QVERIFY(dir.mkpath("dir/.hiddendir"));
         QString testDir = dir.path() + "/dir";
-        touchFile(testDir + "/dir1/f1");
-        touchFile(testDir + "/dir2/f2");
-        touchFile(testDir + "/dir2/.hidden");
-        touchFile(testDir + "/.hiddendir/f1");
-        touchFile(testDir + "/.hiddendir/.hidden");
+        createEmptyFile(testDir + "/dir1/f1");
+        createEmptyFile(testDir + "/dir2/f2");
+        createEmptyFile(testDir + "/dir2/.hidden");
+        createEmptyFile(testDir + "/.hiddendir/f1");
+        createEmptyFile(testDir + "/.hiddendir/.hidden");
 
         QVERIFY(FsUtils::recursiveRm(testDir));
         QVERIFY(!QFile::exists(testDir));
+    }
+
+    void testTouch()
+    {
+        QDir dir(m_sandBoxDirName);
+        dir.mkpath(".");
+        QString testFile = dir.path() + "/test";
+        createEmptyFile(testFile);
+        QFileInfo info(testFile);
+        QDateTime mtime = info.lastModified();
+
+        QTest::qWait(1000);
+        QVERIFY(FsUtils::touch(testFile));
+
+        info.refresh();
+        QVERIFY(mtime.msecsTo(info.lastModified()) >= 1000);
     }
 
 private:

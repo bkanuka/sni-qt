@@ -25,6 +25,8 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <utime.h>
 
 namespace FsUtils {
 
@@ -72,6 +74,17 @@ bool recursiveRm(const QString& dirName)
     ok = dir.rmdir(dir.path());
     if (!ok) {
         qCritical("Failed to remove empty dir %s", qPrintable(dir.path()));
+        return false;
+    }
+    return true;
+}
+
+bool touch(const QString& _name)
+{
+    QByteArray name = QFile::encodeName(_name);
+    int ret = utime(name.data(), 0 /* times */);
+    if (ret != 0) {
+        qCritical("Failed to touch %s: %s", name.data(), strerror(errno));
         return false;
     }
     return true;
