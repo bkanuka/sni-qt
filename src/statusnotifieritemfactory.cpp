@@ -17,6 +17,7 @@
 #include <statusnotifieritemfactory.h>
 
 // Local
+#include <debug.h>
 #include <iconcache.h>
 #include <fsutils.h>
 #include <statusnotifieritem.h>
@@ -37,6 +38,7 @@ StatusNotifierItemFactory::StatusNotifierItemFactory()
 : m_iconCacheDir(FsUtils::generateTempDir("qt-sni"))
 , m_isAvailable(false)
 {
+    SNI_DEBUG;
     m_iconCache = new IconCache(m_iconCacheDir, this);
     QDBusServiceWatcher* snwWatcher = new QDBusServiceWatcher(this);
     snwWatcher->addWatchedService(SNW_SERVICE);
@@ -49,14 +51,17 @@ StatusNotifierItemFactory::StatusNotifierItemFactory()
 
 StatusNotifierItemFactory::~StatusNotifierItemFactory()
 {
+    SNI_DEBUG;
     FsUtils::recursiveRm(m_iconCacheDir);
 }
 
 void StatusNotifierItemFactory::connectToSnw()
 {
+    SNI_DEBUG;
     m_isAvailable = false;
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_IFACE);
     if (!snw.isValid()) {
+        SNI_WARNING << "Invalid interface to SNW_SERVICE";
         return;
     }
 
@@ -67,7 +72,7 @@ void StatusNotifierItemFactory::connectToSnw()
     // FIXME: Make this async?
     QVariant value = snw.property("IsStatusNotifierHostRegistered");
     if (!value.canConvert<bool>()) {
-        qWarning() << "IsStatusNotifierHostRegistered returned something which is not a bool:" << value;
+        SNI_WARNING << "IsStatusNotifierHostRegistered returned something which is not a bool:" << value;
         return;
     }
     m_isAvailable = value.toBool();
@@ -79,6 +84,7 @@ void StatusNotifierItemFactory::connectToSnw()
 
 QAbstractSystemTrayIconSys *StatusNotifierItemFactory::create(QSystemTrayIcon *trayIcon)
 {
+    SNI_DEBUG;
     StatusNotifierItem* item = new StatusNotifierItem(trayIcon, m_iconCache);
     connect(item, SIGNAL(destroyed(QObject*)), SLOT(slotItemDestroyed(QObject*)));
     m_items.insert(item);
@@ -91,8 +97,9 @@ bool StatusNotifierItemFactory::isAvailable() const
     return m_isAvailable;
 }
 
-void StatusNotifierItemFactory::slotSnwOwnerChanged(const QString&, const QString&, const QString& newOwner)
+void StatusNotifierItemFactory::slotSnwOwnerChanged(const QString&, const QString& oldOwner, const QString& newOwner)
 {
+    SNI_DEBUG << "oldOwner" << oldOwner << "newOwner" << newOwner;
     bool oldAvailable = m_isAvailable;
     if (newOwner.isEmpty()) {
         m_isAvailable = false;
@@ -107,19 +114,23 @@ void StatusNotifierItemFactory::slotSnwOwnerChanged(const QString&, const QStrin
 
 void StatusNotifierItemFactory::slotHostRegisteredWithSnw()
 {
+    SNI_DEBUG;
     if (!m_isAvailable) {
         m_isAvailable = true;
+        SNI_DEBUG << "Emitting availableChanged(true)";
         availableChanged(m_isAvailable);
     }
 }
 
 void StatusNotifierItemFactory::slotItemDestroyed(QObject* obj)
 {
+    SNI_DEBUG;
     m_items.remove(static_cast<StatusNotifierItem*>(obj));
 }
 
 void StatusNotifierItemFactory::registerItem(StatusNotifierItem* item)
 {
+    SNI_DEBUG;
     QDBusInterface snw(SNW_SERVICE, SNW_PATH, SNW_IFACE);
     snw.asyncCall("RegisterStatusNotifierItem", item->objectPath());
 }

@@ -17,6 +17,7 @@
 #include "statusnotifieritem.h"
 
 // Local
+#include <debug.h>
 #include <iconcache.h>
 #include <statusnotifieritemadaptor.h>
 
@@ -59,6 +60,7 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCac
 
     static int id = 1;
     m_objectPath = QString("/org/kde/statusnotifieritem/%1").arg(id++);
+    SNI_VAR(m_objectPath);
 
     new StatusNotifierItemAdaptor(this);
     QDBusConnection bus = QDBusConnection::sessionBus();
@@ -77,11 +79,13 @@ QRect StatusNotifierItem::geometry() const
 
 void StatusNotifierItem::updateVisibility()
 {
+    SNI_DEBUG << "NewStatus(" << status() << ")";
     NewStatus(status());
 }
 
 void StatusNotifierItem::updateIcon()
 {
+    SNI_DEBUG;
     NewIcon();
     // ToolTip contains the icon
     NewToolTip();
@@ -89,6 +93,7 @@ void StatusNotifierItem::updateIcon()
 
 void StatusNotifierItem::updateToolTip()
 {
+    SNI_DEBUG;
     NewToolTip();
 }
 
@@ -96,6 +101,7 @@ void StatusNotifierItem::updateMenu()
 {
     delete m_dbusMenuExporter;
     QMenu* menu = trayIcon->contextMenu();
+    SNI_VAR(menu);
     if (!menu) {
         return;
     }
@@ -105,6 +111,7 @@ void StatusNotifierItem::updateMenu()
 void StatusNotifierItem::showMessage(const QString &title, const QString &message,
     QSystemTrayIcon::MessageIcon icon, int msecs)
 {
+    SNI_DEBUG << title << message;
     QString iconString;
     switch (icon) {
     case QSystemTrayIcon::NoIcon:
@@ -135,15 +142,18 @@ void StatusNotifierItem::showMessage(const QString &title, const QString &messag
 
 void StatusNotifierItem::Activate(int, int)
 {
+    SNI_DEBUG;
     sendActivated(QSystemTrayIcon::Trigger);
 }
 
 void StatusNotifierItem::ContextMenu(int, int)
 {
+    SNI_DEBUG;
 }
 
 void StatusNotifierItem::Scroll(int delta, const QString& orientationString)
 {
+    SNI_DEBUG << "delta=" << delta << "orientationString=" << orientationString;
     QPoint globalPos = QCursor::pos();
     QPoint pos;
     Qt::Orientation orientation = orientationString == "horizontal" ? Qt::Horizontal : Qt::Vertical;
@@ -153,6 +163,7 @@ void StatusNotifierItem::Scroll(int delta, const QString& orientationString)
 
 void StatusNotifierItem::SecondaryActivate(int, int)
 {
+    SNI_DEBUG;
     sendActivated(QSystemTrayIcon::MiddleClick);
 }
 
