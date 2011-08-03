@@ -289,12 +289,20 @@ void StatusNotifierItem::slotAboutToShow()
     SNI_DEBUG;
     if (!m_activateAction) {
         if (needsActivateAction()) {
-            m_activateAction = new QAction(this);
             // Hack: reuse an existing Qt translation so we don't have to add
-            // translations ourself.
+            // translations ourself. Note that we use QTranslator without
+            // installing it to ensure we do not trigger any unwanted side-effect
+            // in the application.
             QTranslator translator;
             translator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
-            m_activateAction->setText(translator.translate("QApplication", "Activate"));
+            QString text = translator.translate("QApplication", "Activate");
+            if (text.isEmpty()) {
+                // QTranslator::translate() does not fallback, do it ourself
+                text = "Activate";
+            }
+
+            m_activateAction = new QAction(this);
+            m_activateAction->setText(text);
             connect(m_activateAction, SIGNAL(triggered(bool)), SLOT(sendActivatedByTrigger()));
         }
     }
