@@ -33,6 +33,7 @@
 #include <QDebug>
 #include <QMenu>
 #include <QSettings>
+#include <QTranslator>
 #include <QWheelEvent>
 
 static const char* SNI_CATEGORY_PROPERTY = "_sni_qt_category";
@@ -291,7 +292,9 @@ void StatusNotifierItem::slotAboutToShow()
             m_activateAction = new QAction(this);
             // Hack: reuse an existing Qt translation so we don't have to add
             // translations ourself.
-            m_activateAction->setText(QApplication::translate("QApplication", "Activate"));
+            QTranslator translator;
+            translator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+            m_activateAction->setText(translator.translate("QApplication", "Activate"));
             connect(m_activateAction, SIGNAL(triggered(bool)), SLOT(sendActivatedByTrigger()));
         }
     }
