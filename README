@@ -43,10 +43,7 @@ trigger it.
 In case an application does not provide an entry in its context menu to trigger
 the same action as left-clicking on the icon, you can tell sni-qt to add an
 "Activate" action at the top of the menu. This is configured in a file named
-'sni-qt.conf'. sni-qt will look for it in these dirs:
-
-- $HOME/.config/canonical
-- /etc/xdg/canonical
+'sni-qt.conf'. sni-qt will look for it in '$HOME/.config' and '/etc/xdg'.
 
 This file should look like this:
 
