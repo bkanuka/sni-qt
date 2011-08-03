@@ -50,3 +50,12 @@
   => Icon reappears in hosts
 - Click icon => menu appears
 - Select Quit => test program exits
+
+# ActivateAction
+- Edit "~/.config/canonical/sni-qt.conf", set "need-activate-action/systray" to 1
+- Start systray
+- Click icon => menu appears, with an "Activate" entry
+- Click "Activate" => icon changes from Heart to trash
+- Edit "~/.config/canonical/sni-qt.conf", set "need-activate-action/systray" to 0
+- Restart systray
+- Click icon => menu appears, without "Activate" entry
