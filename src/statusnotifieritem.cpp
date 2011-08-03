@@ -276,7 +276,7 @@ static bool needsActivateAction()
 {
     static int value = -1;
     if (value == -1) {
-        QSettings settings("sni-qt", "sni-qt");
+        QSettings settings("sni-qt");
         QString binaryName = QCoreApplication::applicationFilePath().section("/", -1);
         QString key = QString("need-activate-action/%1").arg(binaryName);
         value = settings.value(key).toBool() ? 1 : 0;
