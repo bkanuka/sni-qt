@@ -247,9 +247,9 @@ QString StatusNotifierItem::category() const
 
     QString category = value.toString();
     if (!validCategories.contains(category)) {
-        qWarning("\"%s\" is not a valid value for \"%s\" property. Valid values are: %s",
-            qPrintable(category), SNI_CATEGORY_PROPERTY,
-            qPrintable(validCategories.join(", ")));
+        SNI_WARNING << category << "is not a valid value for the" << SNI_CATEGORY_PROPERTY << "property. Valid values are:"
+            << validCategories.join(", ")
+            ;
     }
     return category;
 }
@@ -289,6 +289,7 @@ void StatusNotifierItem::slotAboutToShow()
     SNI_DEBUG;
     if (!m_activateAction) {
         if (needsActivateAction()) {
+            SNI_INFO << "Adding an \"Activate\" entry to the StatusNotifierItem context menu";
             // Hack: reuse an existing Qt translation so we don't have to add
             // translations ourself. Note that we use QTranslator without
             // installing it to ensure we do not trigger any unwanted side-effect

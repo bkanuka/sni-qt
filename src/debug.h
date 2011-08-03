@@ -19,24 +19,26 @@
 
 // Qt
 #include <QDebug>
-#include <QTime>
 
-inline QDebug _sniTrace(bool isDebug, const char* function)
-{
-    QDebug debug = isDebug ? qDebug() : qWarning();
-    debug << "sni-qt" << (isDebug ? "DBG" : "WRN");
-    debug << QTime::currentTime().toString("HH:mm:ss.zzz").toUtf8().data();
-    debug << function;
-    return debug;
-}
+namespace Debug {
+enum Level {
+    WarningLevel,
+    InfoLevel,
+    DebugLevel
+};
+
+QDebug trace(Level level, const char* function);
+
+} // namespace
 
 // Simple macros to get KDebug like support
 #ifdef SNI_DEBUG_OUTPUT
-    #define SNI_DEBUG  _sniTrace(true, __PRETTY_FUNCTION__)
+    #define SNI_DEBUG  Debug::trace(Debug::DebugLevel, __PRETTY_FUNCTION__)
 #else
     #define SNI_DEBUG  while (false) qDebug()
 #endif
-#define SNI_WARNING _sniTrace(false, __PRETTY_FUNCTION__)
+#define SNI_INFO Debug::trace(Debug::InfoLevel, __PRETTY_FUNCTION__)
+#define SNI_WARNING Debug::trace(Debug::WarningLevel, __PRETTY_FUNCTION__)
 
 // Log a variable name and value
 #define SNI_VAR(var) SNI_DEBUG << #var ":" << var

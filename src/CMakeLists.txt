@@ -2,6 +2,7 @@
 set(sni_qt_SRCS
     dbusimage.cpp
     dbustooltip.cpp
+    debug.cpp
     fsutils.cpp
     iconcache.cpp
     statusnotifieritem.cpp
