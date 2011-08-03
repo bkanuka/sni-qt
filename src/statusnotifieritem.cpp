@@ -35,7 +35,7 @@
 #include <QSettings>
 #include <QWheelEvent>
 
-static const char* SNI_CATEGORY_PROPERTY = "_qt_sni_category";
+static const char* SNI_CATEGORY_PROPERTY = "_sni_qt_category";
 static const char* DEFAULT_CATEGORY = "ApplicationStatus";
 
 static const char* NOTIFICATION_INTERFACE = "org.freedesktop.Notifications";

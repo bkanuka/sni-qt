@@ -12,7 +12,7 @@ this repository: http://gitorious.org/~agateau/qt/agateau-qt.
 
 QSystemTrayIcon has no concept of categories, so sni-qt will create SNI in the
 ApplicationStatus category by default. Application developers can override this
-by setting the "_qt_sni_category" property on their QSystemTrayIcon instance.
+by setting the "_sni_qt_category" property on their QSystemTrayIcon instance.
 
 Valid values for the properties are:
 - "ApplicationStatus" (the default)
@@ -24,7 +24,7 @@ So for example to create a "Hardware" SNI, one would write:
 
     QSystemTrayIcon* icon = new QSystemTrayIcon();
     ...
-    icon->setProperty("_qt_sni_category", "Hardware");
+    icon->setProperty("_sni_qt_category", "Hardware");
     ...
 
 # QSystemTrayIcon::Trigger support

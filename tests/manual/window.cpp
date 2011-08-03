@@ -253,7 +253,7 @@ void Window::createTrayIcon()
     trayIcon = new QSystemTrayIcon(this);
     QByteArray category = qgetenv("SNI_CATEGORY");
     if (!category.isEmpty()) {
-        trayIcon->setProperty("_qt_sni_category", QString::fromLocal8Bit(category));
+        trayIcon->setProperty("_sni_qt_category", QString::fromLocal8Bit(category));
     }
     trayIcon->setContextMenu(trayIconMenu);
 
