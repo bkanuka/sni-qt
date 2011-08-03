@@ -35,8 +35,6 @@
 #include <QSettings>
 #include <QWheelEvent>
 
-namespace SniQt {
-
 static const char* SNI_CATEGORY_PROPERTY = "_sni_qt_category";
 static const char* DEFAULT_CATEGORY = "ApplicationStatus";
 
@@ -306,7 +304,5 @@ void StatusNotifierItem::slotAboutToShow()
         menu->insertAction(menu->actions().first(), m_activateAction);
     }
 }
-
-} // namespace SniQt
 
 #include <statusnotifieritem.moc>

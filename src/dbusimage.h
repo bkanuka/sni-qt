@@ -24,10 +24,9 @@
 
 class QDBusArgument;
 
-namespace SniQt {
-
 struct DBusImage;
 typedef QList<DBusImage> DBusImageList;
+Q_DECLARE_METATYPE(DBusImageList)
 
 struct DBusImage
 {
@@ -37,13 +36,9 @@ struct DBusImage
     static DBusImage createFromPixmap(const QPixmap&);
     static DBusImageList createListFromIcon(const QIcon&);
 };
+Q_DECLARE_METATYPE(DBusImage)
 
 QDBusArgument& operator<<(QDBusArgument&, const DBusImage&);
 const QDBusArgument& operator>>(const QDBusArgument&, DBusImage&);
-
-} // namespace SniQt
-
-Q_DECLARE_METATYPE(SniQt::DBusImageList)
-Q_DECLARE_METATYPE(SniQt::DBusImage)
 
 #endif /* DBUSIMAGE_H */

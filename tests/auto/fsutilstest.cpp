@@ -28,8 +28,6 @@
 // libc
 #include <stdlib.h>
 
-using namespace SniQt;
-
 static void createEmptyFile(const QString& name)
 {
     QFile file(name);

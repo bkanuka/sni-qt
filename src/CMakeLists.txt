@@ -23,7 +23,7 @@ qt4_automoc(${sni_qt_SRCS})
 
 qt4_add_dbus_adaptor(sni_qt_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/org.kde.StatusNotifierItem.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/statusnotifieritem.h SniQt::StatusNotifierItem
+    ${CMAKE_CURRENT_SOURCE_DIR}/statusnotifieritem.h StatusNotifierItem
     )
 
 add_library(sni-qt MODULE

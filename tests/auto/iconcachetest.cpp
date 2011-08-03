@@ -27,8 +27,6 @@
 #include <QPainter>
 #include <QtTestGui>
 
-using namespace SniQt;
-
 static QImage createTestImage(int size, const QColor& color)
 {
     QImage img(size, size, QImage::Format_ARGB32);

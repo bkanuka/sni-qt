@@ -24,8 +24,6 @@
 
 class QDBusArgument;
 
-namespace SniQt {
-
 struct DBusToolTip
 {
     QString iconName;
@@ -34,11 +32,9 @@ struct DBusToolTip
     QString description;
 };
 
+Q_DECLARE_METATYPE(DBusToolTip)
+
 QDBusArgument& operator<<(QDBusArgument&, const DBusToolTip&);
 const QDBusArgument& operator>>(const QDBusArgument&, DBusToolTip&);
-
-} // namespace SniQt
-
-Q_DECLARE_METATYPE(SniQt::DBusToolTip)
 
 #endif /* DBUSTOOLTIP_H */

@@ -26,8 +26,6 @@
 // libc
 #include <arpa/inet.h>
 
-namespace SniQt {
-
 QDBusArgument& operator<<(QDBusArgument& argument, const DBusImage& image)
 {
     argument.beginStructure();
@@ -91,5 +89,3 @@ DBusImage DBusImage::createFromPixmap(const QPixmap& pixmap)
 
     return dbusImage;
 }
-
-} // namespace SniQt

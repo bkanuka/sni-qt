@@ -32,8 +32,6 @@ class QDBusObjectPath;
 
 class DBusMenuExporter;
 
-namespace SniQt {
-
 class IconCache;
 
 class StatusNotifierItem : public QObject, public QAbstractSystemTrayIconSys
@@ -110,7 +108,5 @@ private:
 
     QString menuObjectPath() const;
 };
-
-} // namespace SniQt
 
 #endif // STATUSNOTIFIERITEM_H

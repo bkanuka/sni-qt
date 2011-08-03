@@ -30,8 +30,6 @@
 #include <QDebug>
 #include <QtPlugin>
 
-namespace SniQt {
-
 static const char *SNW_SERVICE = "org.kde.StatusNotifierWatcher";
 static const char *SNW_IFACE   = "org.kde.StatusNotifierWatcher";
 static const char *SNW_PATH    = "/StatusNotifierWatcher";
@@ -137,8 +135,7 @@ void StatusNotifierItemFactory::registerItem(StatusNotifierItem* item)
     snw.asyncCall("RegisterStatusNotifierItem", item->objectPath());
 }
 
-} // namespace SniQt
 
-Q_EXPORT_PLUGIN2(statusnotifieritem, SniQt::StatusNotifierItemFactory)
+Q_EXPORT_PLUGIN2(statusnotifieritem, StatusNotifierItemFactory)
 
 #include <statusnotifieritemfactory.moc>
