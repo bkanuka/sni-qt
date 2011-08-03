@@ -39,6 +39,10 @@ if (SNI_DEBUG_OUTPUT)
 endif (SNI_DEBUG_OUTPUT)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual -Wall -std=c++0x")
 
+# Build with all symbols hidden. The symbols declared by the Q_EXPORT_PLUGIN2
+# macro are explicitly marked as visible, so the plugin can be loaded.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+
 # Source
 add_subdirectory(src)
 add_subdirectory(tests/auto)
