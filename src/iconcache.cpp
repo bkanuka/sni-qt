@@ -24,6 +24,8 @@
 #include <QDir>
 #include <QIcon>
 
+namespace SniQt {
+
 const int IconCache::MaxIconCount = 10;
 
 IconCache::IconCache(const QString& baseDir, QObject* parent)
@@ -121,5 +123,7 @@ void IconCache::cacheIcon(const QIcon& icon) const
     // dir to decide whether it should look for new icons in the theme dir.
     FsUtils::touch(m_themePath);
 }
+
+} // namespace SniQt
 
 #include <iconcache.moc>

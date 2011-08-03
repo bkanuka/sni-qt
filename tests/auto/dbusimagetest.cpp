@@ -28,6 +28,8 @@
 // libc
 #include <arpa/inet.h>
 
+using namespace SniQt;
+
 static QImage qImageFromDBusImage(const DBusImage& dbusImage)
 {
     QImage img(dbusImage.width, dbusImage.height, QImage::Format_ARGB32);

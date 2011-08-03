@@ -23,6 +23,8 @@
 
 class QIcon;
 
+namespace SniQt {
+
 /**
  * This class will save pixmaps from icons in a temporary dir on the disk,
  * making it possible to pass filenames for icons without names.
@@ -49,5 +51,7 @@ private:
     void cacheIcon(const QIcon&) const;
     void trimCache() const;
 };
+
+} // namespace SniQt
 
 #endif /* ICONCACHE_H */

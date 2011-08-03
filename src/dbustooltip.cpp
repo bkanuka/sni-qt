@@ -19,6 +19,8 @@
 // Qt
 #include <QDBusArgument>
 
+namespace SniQt {
+
 QDBusArgument& operator<<(QDBusArgument& argument, const DBusToolTip& tip)
 {
     argument.beginStructure();
@@ -34,3 +36,5 @@ const QDBusArgument& operator>>(const QDBusArgument& argument, DBusToolTip& tip)
     argument.endStructure();
     return argument;
 }
+
+} // namespace SniQt

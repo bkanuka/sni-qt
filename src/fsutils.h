@@ -20,6 +20,8 @@
 // Qt
 #include <QString>
 
+namespace SniQt {
+
 namespace FsUtils {
 
 QString generateTempDir(const QString& prefix);
@@ -28,6 +30,8 @@ bool recursiveRm(const QString& dirName);
 
 bool touch(const QString& name);
 
-} // namespace
+} // namespace FsUtils
+
+} // namespace SniQt
 
 #endif /* FSUTILS_H */

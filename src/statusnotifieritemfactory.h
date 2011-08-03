@@ -23,6 +23,8 @@
 // Qt
 #include <QSet>
 
+namespace SniQt {
+
 class IconCache;
 class StatusNotifierItem;
 
@@ -50,5 +52,7 @@ private:
     void connectToSnw();
     void registerItem(StatusNotifierItem*);
 };
+
+} // namespace SniQt
 
 #endif /* STATUSNOTIFIERITEMFACTORY_H */

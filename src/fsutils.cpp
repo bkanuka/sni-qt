@@ -28,6 +28,8 @@
 #include <sys/types.h>
 #include <utime.h>
 
+namespace SniQt {
+
 namespace FsUtils {
 
 QString generateTempDir(const QString& prefix)
@@ -90,4 +92,6 @@ bool touch(const QString& _name)
     return true;
 }
 
-} // namespace
+} // namespace FsUtils
+
+} // namespace SniQt
