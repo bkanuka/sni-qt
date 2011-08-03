@@ -1,3 +1,11 @@
+# 0.2.2 - 2011.08.03
+- Add the ability to show an Activate entry to the menu if the app does not provide it.
+- Survive a restart of the StatusNotifierWatcher process.
+- Build with -fvisibility=hidden and move all classes into a SniQt namespace to
+  reduce risks of symbol clashes.
+- Rename _qt_sni_category to _sni_qt_category.
+- Touch the icon theme dir, so that GTK looks into it and find new icons.
+
 # 0.2.1 - 2011.08.02
 - Add build-time option to enable debug output
 - Document the _qt_sni_property hack
