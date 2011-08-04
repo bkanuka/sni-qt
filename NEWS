@@ -1,3 +1,10 @@
+# 0.2.3 - 2011.08.04
+- Log message when an "Activate" entry is added.
+- Load Qt translations ourself for the "Activate" entry.
+- Make sure we fallback to the English version of "Activate".
+- Move the config file from canonical/sni-qt.conf to sni-qt.conf.
+- Revert namespace'ification.
+
 # 0.2.2 - 2011.08.03
 - Add the ability to show an Activate entry to the menu if the app does not provide it.
 - Survive a restart of the StatusNotifierWatcher process.
