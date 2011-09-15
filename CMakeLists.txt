@@ -33,10 +33,6 @@ find_package(Qt4 REQUIRED)
 pkg_check_modules(DBUSMENUQT REQUIRED dbusmenu-qt)
 
 # Build flags
-option(SNI_DEBUG_OUTPUT "Enable debug output" OFF)
-if (SNI_DEBUG_OUTPUT)
-    add_definitions(-DSNI_DEBUG_OUTPUT)
-endif (SNI_DEBUG_OUTPUT)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual -Wall -std=c++0x")
 
 # Build with all symbols hidden. The symbols declared by the Q_EXPORT_PLUGIN2

@@ -24,6 +24,7 @@ namespace Settings {
 
 static bool s_initialized = false;
 static bool s_needsActivateAction;
+static bool s_debug;
 
 static void init()
 {
@@ -35,12 +36,23 @@ static void init()
     QString binaryName = QCoreApplication::applicationFilePath().section("/", -1);
     QString key = QString("need-activate-action/%1").arg(binaryName);
     s_needsActivateAction = settings.value(key).toBool();
+
+    // Keys without a group name are picked from the "general" group
+    s_debug = settings.value("debug").toBool();
+
+    s_initialized = true;
 }
 
 bool needsActivateAction()
 {
     init();
     return s_needsActivateAction;
+}
+
+bool debug()
+{
+    init();
+    return s_debug;
 }
 
 } // namespace

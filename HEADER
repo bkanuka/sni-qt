@@ -14,13 +14,3 @@
    You should have received a copy of the GNU Lesser General Public License
    along with sni-qt.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef SETTINGS_H
-#define SETTINGS_H
-
-namespace Settings
-{
-bool needsActivateAction();
-bool debug();
-};
-
-#endif // SETTINGS_H

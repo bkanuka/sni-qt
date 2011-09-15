@@ -17,6 +17,9 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+// Local
+#include <settings.h>
+
 // Qt
 #include <QDebug>
 
@@ -32,11 +35,7 @@ QDebug trace(Level level, const char* function);
 } // namespace
 
 // Simple macros to get KDebug like support
-#ifdef SNI_DEBUG_OUTPUT
-    #define SNI_DEBUG  Debug::trace(Debug::DebugLevel, __PRETTY_FUNCTION__)
-#else
-    #define SNI_DEBUG  while (false) qDebug()
-#endif
+#define SNI_DEBUG if (Settings::debug()) Debug::trace(Debug::DebugLevel, __PRETTY_FUNCTION__)
 #define SNI_INFO Debug::trace(Debug::InfoLevel, __PRETTY_FUNCTION__)
 #define SNI_WARNING Debug::trace(Debug::WarningLevel, __PRETTY_FUNCTION__)
 

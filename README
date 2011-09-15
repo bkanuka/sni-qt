@@ -55,9 +55,14 @@ Where 'foo' and 'bar' are the binary names of the applications which needs an
 "Activate" action. Setting the value to '0' will disable the action again (so
 you can override the system-wide file)
 
-# Build options
+# Debug
 
-run cmake with -DSNI_DEBUG_OUTPUT=ON to enable debug output.
+In the configuration file, add:
+
+    [general]
+    debug=1
+
+To activate debug output to stderr.
 
 # Author
 
