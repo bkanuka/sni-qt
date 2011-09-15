@@ -19,6 +19,7 @@
 // Local
 #include <debug.h>
 #include <iconcache.h>
+#include <settings.h>
 #include <statusnotifieritemadaptor.h>
 
 // dbusmenu-qt
@@ -32,7 +33,6 @@
 #include <QDBusMetaType>
 #include <QDebug>
 #include <QMenu>
-#include <QSettings>
 #include <QTranslator>
 #include <QWheelEvent>
 
@@ -272,23 +272,11 @@ void StatusNotifierItem::sendActivatedByTrigger()
     sendActivated(QSystemTrayIcon::Trigger);
 }
 
-static bool needsActivateAction()
-{
-    static int value = -1;
-    if (value == -1) {
-        QSettings settings("sni-qt");
-        QString binaryName = QCoreApplication::applicationFilePath().section("/", -1);
-        QString key = QString("need-activate-action/%1").arg(binaryName);
-        value = settings.value(key).toBool() ? 1 : 0;
-    }
-    return value == 1;
-}
-
 void StatusNotifierItem::slotAboutToShow()
 {
     SNI_DEBUG;
     if (!m_activateAction) {
-        if (needsActivateAction()) {
+        if (Settings::needsActivateAction()) {
             SNI_INFO << "Adding an \"Activate\" entry to the StatusNotifierItem context menu";
             // Hack: reuse an existing Qt translation so we don't have to add
             // translations ourself. Note that we use QTranslator without

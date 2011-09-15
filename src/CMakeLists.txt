@@ -5,6 +5,7 @@ set(sni_qt_SRCS
     debug.cpp
     fsutils.cpp
     iconcache.cpp
+    settings.cpp
     statusnotifieritem.cpp
     statusnotifieritemfactory.cpp
     )
