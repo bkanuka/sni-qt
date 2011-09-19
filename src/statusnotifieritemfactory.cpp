@@ -23,6 +23,7 @@
 #include <statusnotifieritem.h>
 
 // Qt
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -35,10 +36,14 @@ static const char *SNW_IFACE   = "org.kde.StatusNotifierWatcher";
 static const char *SNW_PATH    = "/StatusNotifierWatcher";
 
 StatusNotifierItemFactory::StatusNotifierItemFactory()
-: m_iconCacheDir(FsUtils::generateTempDir("qt-sni"))
-, m_isAvailable(false)
+: m_isAvailable(false)
 {
-    SNI_DEBUG;
+    QString tempSubDir = QString("qt-sni-%1-%2")
+        .arg(QCoreApplication::applicationFilePath().section('/', -1))
+        .arg(QCoreApplication::applicationPid());
+    m_iconCacheDir = FsUtils::generateTempDir(tempSubDir);
+    SNI_VAR(m_iconCacheDir);
+
     m_iconCache = new IconCache(m_iconCacheDir, this);
     QDBusServiceWatcher* snwWatcher = new QDBusServiceWatcher(this);
     snwWatcher->addWatchedService(SNW_SERVICE);
