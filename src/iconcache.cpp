@@ -20,11 +20,21 @@
 #include <fsutils.h>
 
 // Qt
+#include <QCoreApplication>
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
 
 const int IconCache::MaxIconCount = 10;
+
+static QString keyForIcon(const QIcon& icon)
+{
+    static QString prefix = QString("%1-%2-")
+        .arg(QCoreApplication::applicationFilePath().section('/', -1))
+        .arg(QCoreApplication::applicationPid());
+
+    return prefix + QString::number(icon.cacheKey());
+}
 
 IconCache::IconCache(const QString& baseDir, QObject* parent)
 : QObject(parent)
@@ -50,8 +60,8 @@ QString IconCache::nameForIcon(const QIcon& icon) const
         return QString();
     }
 
-    qint64 key = icon.cacheKey();
-    QList<qint64>::iterator it = qFind(m_cacheKeys.begin(), m_cacheKeys.end(), key);
+    QString key = keyForIcon(icon);
+    QStringList::iterator it = qFind(m_cacheKeys.begin(), m_cacheKeys.end(), key);
     if (it == m_cacheKeys.end()) {
         cacheIcon(icon);
         trimCache();
@@ -61,7 +71,7 @@ QString IconCache::nameForIcon(const QIcon& icon) const
         m_cacheKeys.append(key);
     }
 
-    return QString::number(key);
+    return key;
 }
 
 void IconCache::trimCache() const
@@ -70,7 +80,7 @@ void IconCache::trimCache() const
     dir.setFilter(QDir::Dirs);
 
     while (m_cacheKeys.count() > MaxIconCount) {
-        qint64 cacheKey = m_cacheKeys.takeFirst();
+        QString cacheKey = m_cacheKeys.takeFirst();
 
         Q_FOREACH(const QString& sizeDir, dir.entryList()) {
             QString iconSubPath = QString("%1/apps/%2.png").arg(sizeDir).arg(cacheKey);
@@ -83,7 +93,7 @@ void IconCache::trimCache() const
 
 void IconCache::cacheIcon(const QIcon& icon) const
 {
-    qint64 key = icon.cacheKey();
+    QString key = keyForIcon(icon);
     QList<QSize> sizes = icon.availableSizes();
     if (sizes.isEmpty()) {
         // sizes can be empty if icon is an SVG. In this case generate images for a few sizes

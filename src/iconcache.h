@@ -18,8 +18,8 @@
 #define ICONCACHE_H
 
 // Qt
-#include <QList>
 #include <QObject>
+#include <QStringList>
 
 class QIcon;
 
@@ -40,11 +40,11 @@ public:
     QString nameForIcon(const QIcon& icon) const;
 
     // Internal, testing only
-    QList<qint64> cacheKeys() const { return m_cacheKeys; }
+    QStringList cacheKeys() const { return m_cacheKeys; }
 
 private:
     QString m_themePath;
-    mutable QList<qint64> m_cacheKeys;
+    mutable QStringList m_cacheKeys;
 
     void cacheIcon(const QIcon&) const;
     void trimCache() const;

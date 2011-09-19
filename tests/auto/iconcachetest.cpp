@@ -135,13 +135,13 @@ private Q_SLOTS:
         cache.nameForIcon(icon3);
 
         // cacheKeysBefore should contains keys for icon1, icon2, icon3
-        QList<qint64> cacheKeysBefore = cache.cacheKeys();
+        QStringList cacheKeysBefore = cache.cacheKeys();
 
         // Access icon1, this should place icon1 at the end of cacheKeys, ie:
         // icon2, icon3, icon1
         cache.nameForIcon(icon1);
 
-        QList<qint64> expectedCacheKeys = cacheKeysBefore;
+        QStringList expectedCacheKeys = cacheKeysBefore;
         expectedCacheKeys << expectedCacheKeys.takeFirst();
 
         // Check the result
