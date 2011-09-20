@@ -29,7 +29,7 @@ const int IconCache::MaxIconCount = 10;
 
 static QString keyForIcon(const QIcon& icon)
 {
-    static QString prefix = QString("%1-%2-")
+    static QString prefix = QString("%1_%2_")
         .arg(QCoreApplication::applicationFilePath().section('/', -1))
         .arg(QCoreApplication::applicationPid());
 
