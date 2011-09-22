@@ -17,7 +17,7 @@
 #include <fsutils.h>
 
 // Qt
-#include <QDebug>
+#include <QDateTime>
 #include <QDir>
 #include <QFile>
 
@@ -79,10 +79,13 @@ bool recursiveRm(const QString& dirName)
     return true;
 }
 
-bool touch(const QString& _name)
+bool touch(const QString& _name, const QDateTime& time)
 {
     QByteArray name = QFile::encodeName(_name);
-    int ret = utime(name.data(), 0 /* times */);
+    struct utimbuf buf;
+    buf.actime = time.toTime_t();
+    buf.modtime = buf.actime;
+    int ret = utime(name.data(), &buf);
     if (ret != 0) {
         qCritical("Failed to touch %s: %s", name.data(), strerror(errno));
         return false;

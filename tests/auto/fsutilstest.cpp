@@ -88,11 +88,10 @@ private Q_SLOTS:
         QFileInfo info(testFile);
         QDateTime mtime = info.lastModified();
 
-        QTest::qWait(1000);
-        QVERIFY(FsUtils::touch(testFile));
+        QVERIFY(FsUtils::touch(testFile, mtime.addSecs(1)));
 
         info.refresh();
-        QVERIFY(mtime.msecsTo(info.lastModified()) >= 1000);
+        QVERIFY(mtime.msecsTo(info.lastModified()) == 1000);
     }
 
 private:

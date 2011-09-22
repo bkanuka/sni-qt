@@ -20,13 +20,15 @@
 // Qt
 #include <QString>
 
+class QDateTime;
+
 namespace FsUtils {
 
 QString generateTempDir(const QString& prefix);
 
 bool recursiveRm(const QString& dirName);
 
-bool touch(const QString& name);
+bool touch(const QString& name, const QDateTime& mtime);
 
 } // namespace
 
