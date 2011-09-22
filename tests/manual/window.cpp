@@ -49,6 +49,7 @@ Window::Window()
 {
     iconAnimationTimeLine = new QTimeLine(1000, this);
     iconAnimationTimeLine->setLoopCount(0);
+    iconAnimationTimeLine->setUpdateInterval(150);
     iconAnimationTimeLine->setCurveShape(QTimeLine::LinearCurve);
     connect(iconAnimationTimeLine, SIGNAL(valueChanged(qreal)), SLOT(updateAnimatedIcon()));
 
@@ -118,6 +119,7 @@ void Window::updateAnimatedIcon()
     {
         QPainter painter(&pixmap);
         painter.setRenderHint(QPainter::Antialiasing);
+        painter.setBrush(Qt::white);
         qreal radius = pixmap.width() / 4. - 1;
         qreal angle = iconAnimationTimeLine->currentValue() * 2 * M_PI;
         qreal cx = pixmap.width() / 2 + radius * cos(angle);
