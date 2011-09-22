@@ -55,6 +55,7 @@ class QMenu;
 class QPushButton;
 class QSpinBox;
 class QTextEdit;
+class QTimeLine;
 QT_END_NAMESPACE
 
 //! [0]
@@ -74,15 +75,17 @@ protected:
 #endif
 
 private slots:
-    void setIcon(int index);
+    void setIconFromComboBox(int index);
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void showMessage();
+    void updateAnimatedIcon();
 
 private:
     void createIconGroupBox();
     void createMessageGroupBox();
     void createActions();
     void createTrayIcon();
+    void setIcon(const QIcon&);
 
     QGroupBox *iconGroupBox;
     QLabel *iconLabel;
@@ -111,6 +114,7 @@ private:
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
+    QTimeLine *iconAnimationTimeLine;
 };
 //! [0]
 

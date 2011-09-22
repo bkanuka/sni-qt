@@ -37,14 +37,21 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#include "window.h"
 
+#include <QTimeLine>
 #include <QtGui>
 
-#include "window.h"
+#include <math.h>
 
 //! [0]
 Window::Window()
 {
+    iconAnimationTimeLine = new QTimeLine(1000, this);
+    iconAnimationTimeLine->setLoopCount(0);
+    iconAnimationTimeLine->setCurveShape(QTimeLine::LinearCurve);
+    connect(iconAnimationTimeLine, SIGNAL(valueChanged(qreal)), SLOT(updateAnimatedIcon()));
+
     createIconGroupBox();
     createMessageGroupBox();
 
@@ -57,7 +64,7 @@ Window::Window()
     connect(showIconCheckBox, SIGNAL(toggled(bool)),
             trayIcon, SLOT(setVisible(bool)));
     connect(iconComboBox, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(setIcon(int)));
+            this, SLOT(setIconFromComboBox(int)));
     connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
             this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
@@ -100,15 +107,40 @@ void Window::closeEvent(QCloseEvent *event)
 //! [2]
 
 //! [3]
-void Window::setIcon(int index)
+void Window::setIconFromComboBox(int index)
 {
     QIcon icon = iconComboBox->itemIcon(index);
-    trayIcon->setIcon(icon);
-    setWindowIcon(icon);
+    if (icon.isNull()) {
+        iconAnimationTimeLine->start();
+    } else {
+        iconAnimationTimeLine->stop();
+        setIcon(icon);
+    }
 
     trayIcon->setToolTip(iconComboBox->itemText(index));
 }
-//! [3]
+
+void Window::setIcon(const QIcon& icon)
+{
+    trayIcon->setIcon(icon);
+    setWindowIcon(icon);
+}
+
+void Window::updateAnimatedIcon()
+{
+    QPixmap pixmap(22, 22);
+    pixmap.fill(Qt::transparent);
+    {
+        QPainter painter(&pixmap);
+        painter.setRenderHint(QPainter::Antialiasing);
+        qreal radius = pixmap.width() / 4. - 1;
+        qreal angle = iconAnimationTimeLine->currentValue() * 2 * M_PI;
+        qreal cx = pixmap.width() / 2 + radius * cos(angle);
+        qreal cy = pixmap.height() / 2 + radius * sin(angle);
+        painter.drawEllipse(QPointF(cx, cy), radius, radius);
+    }
+    setIcon(pixmap);
+}
 
 //! [4]
 void Window::iconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -149,6 +181,7 @@ void Window::createIconGroupBox()
     iconComboBox->addItem(QIcon(":/images/heart.svg"), tr("Heart"));
     iconComboBox->addItem(QIcon(":/images/trash.svg"), tr("Trash"));
     iconComboBox->addItem(QIcon::fromTheme("system-file-manager"), tr("File Manager"));
+    iconComboBox->addItem(tr("Generated"));
 
     showIconCheckBox = new QCheckBox(tr("Show icon"));
     showIconCheckBox->setChecked(true);
