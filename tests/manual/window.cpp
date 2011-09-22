@@ -91,21 +91,6 @@ void Window::setVisible(bool visible)
 }
 //! [1]
 
-//! [2]
-void Window::closeEvent(QCloseEvent *event)
-{
-    if (trayIcon->isVisible()) {
-        QMessageBox::information(this, tr("Systray"),
-                                 tr("The program will keep running in the "
-                                    "system tray. To terminate the program, "
-                                    "choose <b>Quit</b> in the context menu "
-                                    "of the system tray entry."));
-        hide();
-        event->ignore();
-    }
-}
-//! [2]
-
 //! [3]
 void Window::setIconFromComboBox(int index)
 {

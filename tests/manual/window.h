@@ -69,7 +69,6 @@ public:
     void setVisible(bool visible);
 
 protected:
-    void closeEvent(QCloseEvent *event);
 #if defined(Q_WS_X11)
     bool eventFilter(QObject *object, QEvent *event);
 #endif

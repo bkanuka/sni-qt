@@ -54,7 +54,6 @@ int main(int argc, char *argv[])
                                           "on this system."));
         return 1;
     }
-    QApplication::setQuitOnLastWindowClosed(false);
 
     Window window;
     window.show();
