@@ -21,6 +21,7 @@
 
 // Qt
 #include <QCoreApplication>
+#include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
@@ -129,7 +130,13 @@ void IconCache::cacheIcon(const QIcon& icon) const
 
     // Touch the theme path: GTK icon loading system checks the mtime of the
     // dir to decide whether it should look for new icons in the theme dir.
-    FsUtils::touch(m_themePath);
+    //
+    // Note: We do not use QDateTime::currentDateTime() as the new time because
+    // if the icon is updated in less than one second, GTK won't notice it.
+    // See https://bugs.launchpad.net/sni-qt/+bug/812884
+    QFileInfo info(m_themePath);
+    QDateTime mtime = info.lastModified();
+    FsUtils::touch(m_themePath, mtime.addSecs(1));
 }
 
 #include <iconcache.moc>
