@@ -7,6 +7,7 @@
 ## changeIcon
 - Change icon to "Trash" (svg based) => host shows trash icon
 - Change icon to "File Manager" (name based) => host shows file manager icon
+- Change icon to "Generated" (dynamic icon) => host shows rotating circle
 
 ## changeStatus
 - Uncheck "Show icon" => host hides icon
