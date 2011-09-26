@@ -1,3 +1,8 @@
+# 0.2.4 - 2011.09.26
+- Make sure GTK notices icon updates (bug #812884).
+- Prevent applications from stealing icons from each others (bug #850139).
+- Turn debug into a runtime option.
+
 # 0.2.3 - 2011.08.04
 - Log message when an "Activate" entry is added.
 - Load Qt translations ourself for the "Activate" entry.
