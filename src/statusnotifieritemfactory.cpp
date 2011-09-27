@@ -38,7 +38,7 @@ static const char *SNW_PATH    = "/StatusNotifierWatcher";
 StatusNotifierItemFactory::StatusNotifierItemFactory()
 : m_isAvailable(false)
 {
-    QString tempSubDir = QString("qt-sni_%1_%2")
+    QString tempSubDir = QString("sni-qt_%1_%2")
         .arg(QCoreApplication::applicationFilePath().section('/', -1))
         .arg(QCoreApplication::applicationPid());
     m_iconCacheDir = FsUtils::generateTempDir(tempSubDir);
