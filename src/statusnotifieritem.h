@@ -105,6 +105,7 @@ private:
     IconCache* m_iconCache;
     QWeakPointer<DBusMenuExporter> m_dbusMenuExporter;
     QAction* m_activateAction;
+    QMenu* m_placeholderMenu;
 
     QString menuObjectPath() const;
 };

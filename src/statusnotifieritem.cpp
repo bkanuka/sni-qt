@@ -58,6 +58,7 @@ StatusNotifierItem::StatusNotifierItem(QSystemTrayIcon* icon, IconCache* iconCac
 : QAbstractSystemTrayIconSys(icon)
 , m_iconCache(iconCache)
 , m_activateAction(0)
+, m_placeholderMenu(new QMenu)
 {
     SNI_VAR(this);
     registerMetaTypes();
@@ -85,6 +86,7 @@ StatusNotifierItem::~StatusNotifierItem()
     // - If the menu is deleted before StatusNotifierItem, then the exporter
     // will already be gone when we reach this point.
     delete m_dbusMenuExporter.data();
+    delete m_placeholderMenu;
 }
 
 QRect StatusNotifierItem::geometry() const
@@ -119,7 +121,10 @@ void StatusNotifierItem::updateMenu()
     QMenu* menu = trayIcon->contextMenu();
     SNI_VAR(menu);
     if (!menu) {
-        return;
+        // A SNI *must* expose a valid menu.  If there is none yet, expose a
+        // placeholder.
+        // See: https://bugs.launchpad.net/ubuntu/+source/hplip/+bug/860395
+        menu = m_placeholderMenu;
     }
     connect(menu, SIGNAL(aboutToShow()), SLOT(slotAboutToShow()));
     m_dbusMenuExporter = new DBusMenuExporter(menuObjectPath(), menu);

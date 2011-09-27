@@ -60,3 +60,8 @@
 - Edit "~/.config/sni-qt.conf", set "need-activate-action/systray" to 0
 - Restart systray
 - Click icon => menu appears, without "Activate" entry
+
+# DelayedMenu (BUG 860395)
+- Start delayedmenu test program
+- Wait for the "Setting menu" message
+- Click icon => a one-item menu appears
