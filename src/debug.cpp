@@ -17,6 +17,7 @@
 #include <debug.h>
 
 // Qt
+#include <QCoreApplication>
 #include <QTime>
 
 namespace Debug {
@@ -28,8 +29,9 @@ QDebug trace(Level level, const char* function)
         "INFO ",
         "DEBUG"
     };
+    static const QByteArray prefix = QByteArray("sni-qt/") + QByteArray::number(QCoreApplication::applicationPid());
     QDebug stream = level == WarningLevel ? qWarning() : qDebug();
-    stream << "sni-qt" << levelStrings[level];
+    stream << prefix << levelStrings[level];
     stream << QTime::currentTime().toString("HH:mm:ss.zzz").toUtf8().data();
     stream << function;
     return stream;
