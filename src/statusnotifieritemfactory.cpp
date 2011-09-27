@@ -81,7 +81,7 @@ void StatusNotifierItemFactory::connectToSnw()
         return;
     }
     m_isAvailable = value.toBool();
-
+    SNI_VAR(m_isAvailable);
     Q_FOREACH(StatusNotifierItem* item, m_items) {
         registerItem(item);
     }
@@ -113,6 +113,7 @@ void StatusNotifierItemFactory::slotSnwOwnerChanged(const QString&, const QStrin
     }
 
     if (oldAvailable != m_isAvailable) {
+        SNI_DEBUG << "Emitting availableChanged(" << m_isAvailable << ")";
         availableChanged(m_isAvailable);
     }
 }
