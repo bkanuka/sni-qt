@@ -1,3 +1,7 @@
+# 0.2.5 - 2011.09.28
+- Prefix log output with pid of application.
+- Use a placeholder menu if there is none defined yet (Fix half of bug #860395).
+
 # 0.2.4 - 2011.09.26
 - Make sure GTK notices icon updates (bug #812884).
 - Prevent applications from stealing icons from each others (bug #850139).
