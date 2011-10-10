@@ -17,24 +17,60 @@
 #include <iconcache.h>
 
 // Local
+#include <debug.h>
 #include <fsutils.h>
 
 // Qt
 #include <QCoreApplication>
+#include <QCryptographicHash>
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QIcon>
+#include <QList>
 
-const int IconCache::MaxIconCount = 10;
+const int IconCache::MaxIconCount = 20;
 
-static QString keyForIcon(const QIcon& icon)
+static QByteArray hashForPixmap(const QList<int>& extents, const QPixmap& pixmap)
+{
+    QCryptographicHash hash(QCryptographicHash::Md4);
+    Q_FOREACH(int extent, extents) {
+        hash.addData(QByteArray::number(extent));
+    }
+    QImage image = pixmap.toImage();
+    hash.addData(reinterpret_cast<const char*>(image.constBits()), image.byteCount());
+    return hash.result().toHex();
+}
+
+static QString computeKeyForIcon(const QIcon& icon)
 {
     static QString prefix = QString("%1_%2_")
         .arg(QCoreApplication::applicationFilePath().section('/', -1))
         .arg(QCoreApplication::applicationPid());
 
-    return prefix + QString::number(icon.cacheKey());
+    // Get a sorted list of extents
+    QList<int> extents;
+    Q_FOREACH(const QSize& size, icon.availableSizes()) {
+        extents << qMax(size.width(), size.height());
+    }
+    qSort(extents);
+    if (extents.isEmpty()) {
+        extents << 16 << 22 << 32 << 48;
+    }
+
+    // Determine the test extent: for our purpose we define it as either the
+    // biggest extent which is <= 32 or, if there is none, the smallest
+    // available
+    int testExtent;
+    auto it = extents.begin(), end = extents.end();
+    do {
+        testExtent = *it;
+        ++it;
+    } while (testExtent <= 32 && it != end);
+
+    QByteArray hash = hashForPixmap(extents, icon.pixmap(testExtent));
+
+    return prefix + QString::fromAscii(hash);
 }
 
 IconCache::IconCache(const QString& baseDir, QObject* parent)
@@ -61,10 +97,10 @@ QString IconCache::nameForIcon(const QIcon& icon) const
         return QString();
     }
 
-    QString key = keyForIcon(icon);
+    QString key = computeKeyForIcon(icon);
     QStringList::iterator it = qFind(m_cacheKeys.begin(), m_cacheKeys.end(), key);
     if (it == m_cacheKeys.end()) {
-        cacheIcon(icon);
+        cacheIcon(key, icon);
         trimCache();
     } else {
         // Place key at the end of list as it is the most recently accessed
@@ -92,9 +128,8 @@ void IconCache::trimCache() const
     }
 }
 
-void IconCache::cacheIcon(const QIcon& icon) const
+void IconCache::cacheIcon(const QString& key, const QIcon& icon) const
 {
-    QString key = keyForIcon(icon);
     QList<QSize> sizes = icon.availableSizes();
     if (sizes.isEmpty()) {
         // sizes can be empty if icon is an SVG. In this case generate images for a few sizes
