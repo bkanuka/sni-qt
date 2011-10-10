@@ -3,7 +3,7 @@ macro(add_test_executable _test)
     set(_src ${ARGN})
     qt4_generate_moc(${_test}.cpp ${_test}.moc)
     qt4_automoc(${_src})
-    add_executable(${_test} ${_test}.cpp ${_test}.moc ${_src} ${test_RC})
+    add_executable(${_test} ${_test}.cpp ${_test}.moc ${_src} ${SRC_DIR}/debug.cpp ${SRC_DIR}/settings.cpp ${test_RC})
     target_link_libraries(${_test} ${test_LIBRARIES})
 
     add_test(${_test} ${_test})
