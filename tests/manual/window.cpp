@@ -109,7 +109,6 @@ void Window::setIconFromComboBox(int index)
 void Window::setIcon(const QIcon& icon)
 {
     trayIcon->setIcon(icon);
-    setWindowIcon(icon);
 }
 
 void Window::updateAnimatedIcon()
