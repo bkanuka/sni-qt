@@ -46,7 +46,7 @@ private:
     QString m_themePath;
     mutable QStringList m_cacheKeys;
 
-    void cacheIcon(const QIcon&) const;
+    void cacheIcon(const QString& key, const QIcon&) const;
     void trimCache() const;
 };
 

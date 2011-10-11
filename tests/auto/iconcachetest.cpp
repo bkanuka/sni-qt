@@ -148,6 +148,17 @@ private Q_SLOTS:
         QCOMPARE(cache.cacheKeys(), expectedCacheKeys);
     }
 
+    void testDetectDuplicatedImages()
+    {
+        IconCache cache(m_sandBoxDirName);
+        QList<int> sizes = QList<int>() << 16 << 22 << 32;
+        QIcon icon1 = createTestIcon(sizes, Qt::red);
+        QIcon icon2 = createTestIcon(sizes, Qt::red);
+        QString icon1Name = cache.nameForIcon(icon1);
+        QString icon2Name = cache.nameForIcon(icon2);
+        QCOMPARE(icon1Name, icon2Name);
+    }
+
 private:
     QString m_sandBoxDirName;
 };

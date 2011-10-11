@@ -49,7 +49,7 @@ Window::Window()
 {
     iconAnimationTimeLine = new QTimeLine(1000, this);
     iconAnimationTimeLine->setLoopCount(0);
-    iconAnimationTimeLine->setUpdateInterval(150);
+    iconAnimationTimeLine->setUpdateInterval(200);
     iconAnimationTimeLine->setCurveShape(QTimeLine::LinearCurve);
     connect(iconAnimationTimeLine, SIGNAL(valueChanged(qreal)), SLOT(updateAnimatedIcon()));
 
@@ -109,7 +109,6 @@ void Window::setIconFromComboBox(int index)
 void Window::setIcon(const QIcon& icon)
 {
     trayIcon->setIcon(icon);
-    setWindowIcon(icon);
 }
 
 void Window::updateAnimatedIcon()
