@@ -54,6 +54,10 @@ QString generateTempDir(const QString& prefix)
 
 bool recursiveRm(const QString& dirName)
 {
+    if (dirName.isEmpty()) {
+        qCritical("dirName is empty, recursiveRm aborted");
+        return false;
+    }
     bool ok;
     QDir dir(dirName);
     dir.setFilter(QDir::NoDotAndDotDot | QDir::AllEntries | QDir::Hidden | QDir::System);

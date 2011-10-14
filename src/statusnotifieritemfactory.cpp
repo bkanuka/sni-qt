@@ -36,12 +36,17 @@ static const char *SNW_IFACE   = "org.kde.StatusNotifierWatcher";
 static const char *SNW_PATH    = "/StatusNotifierWatcher";
 
 StatusNotifierItemFactory::StatusNotifierItemFactory()
-: m_isAvailable(false)
+: m_iconCache(0)
+, m_isAvailable(false)
 {
     QString tempSubDir = QString("sni-qt_%1_%2")
         .arg(QCoreApplication::applicationFilePath().section('/', -1))
         .arg(QCoreApplication::applicationPid());
     m_iconCacheDir = FsUtils::generateTempDir(tempSubDir);
+    if (m_iconCacheDir.isEmpty()) {
+        SNI_WARNING << "Failed to create temp dir for icon cache, not starting sni-qt.";
+        return;
+    }
     SNI_VAR(m_iconCacheDir);
 
     m_iconCache = new IconCache(m_iconCacheDir, this);
@@ -57,7 +62,9 @@ StatusNotifierItemFactory::StatusNotifierItemFactory()
 StatusNotifierItemFactory::~StatusNotifierItemFactory()
 {
     SNI_DEBUG;
-    FsUtils::recursiveRm(m_iconCacheDir);
+    if (!m_iconCacheDir.isEmpty()) {
+        FsUtils::recursiveRm(m_iconCacheDir);
+    }
 }
 
 void StatusNotifierItemFactory::connectToSnw()
