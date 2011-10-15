@@ -1,3 +1,7 @@
+# 0.2.6 - 2011.10.15
+- Abort initialization if temp dir for iconcache cannot be created (bug #874447).
+- Fix animated icons causing unity-panel-service to eat all CPU (bug #865601).
+
 # 0.2.5 - 2011.09.28
 - Prefix log output with pid of application.
 - Use a placeholder menu if there is none defined yet (Fix half of bug #860395).
