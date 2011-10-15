@@ -40,9 +40,15 @@ class FsUtilsTest : public QObject
 {
 Q_OBJECT
 private Q_SLOTS:
+    void initTestCase()
+    {
+        m_baseDirName = QDir::currentPath();
+    }
+
     void init()
     {
-        m_sandBoxDirName = QDir::currentPath() + "/sandbox";
+        QDir::setCurrent(m_baseDirName);
+        m_sandBoxDirName = m_baseDirName + "/sandbox";
         setenv("TMPDIR", m_sandBoxDirName.toLocal8Bit().constData(), 1 /*overwrite*/);
     }
 
@@ -79,6 +85,19 @@ private Q_SLOTS:
         QVERIFY(!QFile::exists(testDir));
     }
 
+    void testRecursiveRmEmptyDir()
+    {
+        // Calling recursiveRm() with an empty QString should not do anything
+        // https://bugs.launchpad.net/sni-qt/+bug/874447
+        QDir dir(m_sandBoxDirName);
+        dir.mkpath("dir");
+        QString testDir = dir.path() + "/dir";
+
+        QVERIFY(QDir::setCurrent(testDir));
+        QVERIFY(!FsUtils::recursiveRm(QString()));
+        QVERIFY(QFile::exists(testDir));
+    }
+
     void testTouch()
     {
         QDir dir(m_sandBoxDirName);
@@ -95,6 +114,7 @@ private Q_SLOTS:
     }
 
 private:
+    QString m_baseDirName;
     QString m_sandBoxDirName;
 };
 
