@@ -257,6 +257,7 @@ void Window::createActions()
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
     quitAction = new QAction(tr("&Quit"), this);
+    quitAction->setIcon(QIcon::fromTheme("application-exit"));
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
