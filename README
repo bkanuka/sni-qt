@@ -8,6 +8,8 @@ This plugin only works when used together with the
 "qsystemtrayicon-plugin-system-4.7" Qt branch. This branch is available from
 this repository: http://gitorious.org/~agateau/qt/agateau-qt.
 
+For convenience, the patch for Qt 4.7.4 is available in the patches/ dir.
+
 # SNI category support
 
 QSystemTrayIcon has no concept of categories, so sni-qt will create SNI in the
