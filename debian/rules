@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
+
+%:
+	dh $@
+
+override_dh_auto_test:
+	# Only one test doesn't need a X display
+	obj-$(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)/tests/auto/fsutilstest
+
+override_dh_makeshlibs:
+	dh_makeshlibs -Nsni-qt
+
+override_dh_install:
+	dh_install --fail-missing
