@@ -8,6 +8,7 @@ Build-Depends: cmake,
                libqt4-dev,
                pkg-config,
                qt4-qmake,
+               xvfb,
 Standards-Version: 3.9.2
 Homepage: https://launchpad.net/sni-qt
 # If you aren't a member of ~canonical-dx-team but need to upload packaging changes,
