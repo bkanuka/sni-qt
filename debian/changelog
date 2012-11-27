@@ -1,6 +1,10 @@
 sni-qt (0.2.7-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Robert Bruce Park ]
   * Inline packaging metadata.
+
+  [ Didier Roche ]
+  * Automatic snapshot from revision 93 (bootstrap)
 
  -- Robert Bruce Park <robert.park@canonical.com>  Thu, 22 Nov 2012 13:37:45 -0600
 
