@@ -128,17 +128,57 @@ void IconCache::trimCache() const
     }
 }
 
-void IconCache::cacheIcon(const QString& key, const QIcon& icon) const
+void IconCache::cacheIcon(const QString& key, const QIcon& iicon) const
 {
+    QIcon icon = QIcon(iicon);
+
+    if (QString::compare(QCoreApplication::applicationFilePath().section('/', -1), "skype") == 0) {
+        QString iconName;
+        QString hash = QString(key);
+        hash.remove(0, hash.lastIndexOf("_")+1);
+
+        if (QString::compare("37e170fc54e7355d9d298917e74f9ea9", hash) == 0) {
+            iconName = "skype_online";
+        } else
+        if (QString::compare("602c84fa0f4d61c64f770495a500279e", hash) == 0) {
+            iconName = "skype_away";
+        } else
+        if (QString::compare("bd2e3972c2a97520bbabac7e275d7b9f", hash) == 0) {
+            iconName = "skype_busy";
+        } else
+        if (QString::compare("2d1ee5482260fd9cd180b32787792683", hash) == 0) {
+            iconName = "skype_offline";
+        } else
+        if (QString::compare("ad07f7e1479ab81315ec8c6c23e19170", hash) == 0) {
+            iconName = "skype_invisible";
+        } else
+        if (QString::compare("f2fc4a539a7b9553f5b35241d1154e84", hash) == 0) {
+            iconName = "skype_load";
+        } else
+        if (QString::compare("dad77418071bead905e2dbe605715dcd", hash) == 0) {
+            iconName = "skype_load";
+        } else
+        if (QString::compare("6cbeda8e2c9f56d3ac75ccdf8d282a69", hash) == 0) {
+            iconName = "skype_load";
+        } else
+        if (QString::compare("0972e5fde53a4a87346ebb91c4c2b159", hash) == 0) {
+            iconName = "skype_load";
+        }
+        else {
+            iconName = "skype_message";
+        }
+        icon = QIcon(QString("/usr/share/icons/skype/%1.svg").arg(iconName));
+    }
+
     QList<QSize> sizes = icon.availableSizes();
     if (sizes.isEmpty()) {
         // sizes can be empty if icon is an SVG. In this case generate images for a few sizes
         #define SIZE(x) QSize(x, x)
         sizes
-            << SIZE(16)
+//            << SIZE(16)
             << SIZE(22)
-            << SIZE(32)
-            << SIZE(48)
+//            << SIZE(32)
+//            << SIZE(48)
             ;
         #undef SIZE
     }
